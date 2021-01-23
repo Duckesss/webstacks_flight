@@ -1,5 +1,6 @@
 import React from "react";
-import { View, TextInput, TouchableOpacity, Text, Button } from "react-native";
+import { View, TouchableOpacity, Text } from "react-native";
+import { FloatingLabelInput } from "react-native-floating-label-input";
 import { withFormik, FormikProps, FormikErrors, Form, Field } from "formik";
 
 import styles from "./styles";
@@ -12,18 +13,23 @@ type Props = FormikProps<FormValues>;
 
 const render = (props: Props) => (
 	<View style={styles.container}>
-		<TextInput
-			style={{ ...styles.input }}
+		<FloatingLabelInput
+			containerStyles={styles.input}
+			labelStyles={styles.label}
+			customLabelStyles={{ fontSizeFocused: 10 }}
 			value={props.values.login}
+			label="Login"
 			onChangeText={text => props.setFieldValue("login", text)}
 		/>
-		<TextInput
-			style={{ ...styles.input, ...styles.distance }}
+		<FloatingLabelInput
+			containerStyles={styles.input}
+			labelStyles={styles.label}
 			value={props.values.password}
+			label="Password"
 			onChangeText={text => props.setFieldValue("password", text)}
 		/>
 		<TouchableOpacity
-			style={{ ...styles.distance, ...styles.button }}
+			style={{ ...styles.button }}
 			onPress={_ => props.handleSubmit()}
 		>
 			<Text>Login</Text>
