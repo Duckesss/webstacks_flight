@@ -1,12 +1,17 @@
 import React from "react";
 import { View, TouchableOpacity, Text, ActivityIndicator } from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
-import { FloatingLabelInput } from "react-native-floating-label-input";
+import {
+	useNavigation,
+	NavigationProp,
+	ParamListBase,
+} from "@react-navigation/native";
 import Toast from "react-native-toast-message";
-import { withFormik, FormikProps } from "formik";
+import { withFormik, FormikProps, Formik } from "formik";
 import api from "../../webservices/api";
 import styles from "./styles";
 import * as Yup from "yup";
+import CustomInput from "../../components/CustomInput";
 
 interface FormValues {
 	username: string;
@@ -28,50 +33,46 @@ const render = (props: FormikProps<Props>) => (
 				size="large"
 			/>
 		)}
-		<FloatingLabelInput
-			containerStyles={styles.input}
-			labelStyles={styles.label}
-			customLabelStyles={{ fontSizeFocused: 10 }}
+		<CustomInput
 			value={props.values.username}
-			label="Username"
-			onChangeText={text => props.setFieldValue("username", text)}
+			label={"Username"}
+			onChange={text => props.setFieldValue("username", text)}
 		/>
 		{props.errors.username && (
 			<Text style={styles.errorLabel}>{props.errors.username}</Text>
 		)}
-		<FloatingLabelInput
-			containerStyles={styles.input}
-			labelStyles={styles.label}
+		<CustomInput
 			value={props.values.password}
-			isPassword
+			label={"Password"}
+			hidePassword={<FontAwesome5 size={15} name="eye-slash" />}
+			showPassword={<FontAwesome5 size={15} name="eye" />}
 			togglePassword={props.values.showPassword}
-			customHidePasswordComponent={
-				<FontAwesome5 size={15} name="eye-slash" />
-			}
-			customShowPasswordComponent={<FontAwesome5 size={15} name="eye" />}
-			customLabelStyles={{ fontSizeFocused: 10 }}
-			label="Password"
-			onChangeText={text => props.setFieldValue("password", text)}
+			isPassword={true}
+			onChange={text => props.setFieldValue("password", text)}
 		/>
 		{props.errors.password && (
 			<Text style={styles.errorLabel}>{props.errors.password}</Text>
 		)}
 		<TouchableOpacity
 			style={{ ...styles.button }}
-			onPress={_ => props.handleSubmit()}
+			onPress={async _ => {
+				await props.handleSubmit();
+				// navigate("MeusVoos");
+			}}
 		>
 			<Text>Login</Text>
 		</TouchableOpacity>
 	</View>
 );
 
-export default withFormik<{}, Props>({
+const Login = withFormik<{}, Props>({
 	mapPropsToValues: _ => ({
 		username: "",
 		password: "",
 		showPassword: false,
 	}),
 	async handleSubmit(values, { setSubmitting }) {
+		const id = Math.ceil(Math.random() * 100);
 		try {
 			await api.post("/posts", {
 				headers: {
@@ -80,11 +81,12 @@ export default withFormik<{}, Props>({
 				body: {
 					username: values.username,
 					password: values.password,
+					id,
 				},
 			});
 			setSubmitting(false);
-			throw "Jonas";
 		} catch (err) {
+			console.log(err);
 			setSubmitting(false);
 			Toast.show({
 				type: "error",
@@ -98,3 +100,5 @@ export default withFormik<{}, Props>({
 		password: Yup.string().required("Password é um campo obrigatório."),
 	}),
 })(render);
+
+export default Login;
