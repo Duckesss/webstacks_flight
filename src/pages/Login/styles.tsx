@@ -24,6 +24,27 @@ export default StyleSheet.create({
 		paddingHorizontal: 5,
 		borderRadius: 5,
 	},
+	loading: {
+		backgroundColor: "rgba(0,0,0,0.3)",
+		position: "absolute",
+		top: 0,
+		right: 0,
+		bottom: 0,
+		left: 0,
+		zIndex: 1,
+	},
+	icon: {
+		fontSize: 30,
+		position: "absolute",
+		zIndex: 1,
+		width: 500,
+		color: "green",
+	},
+	errorLabel: {
+		marginTop: -5,
+		marginBottom: 10,
+		color: "#C94141",
+	},
 	button: {
 		alignItems: "center",
 		backgroundColor: "#DDDDDD",

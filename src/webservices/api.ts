@@ -1,7 +1,5 @@
 import axios from 'axios';
-
-const api = axios.create({
-    baseURL: 'http://rethink-webstack-flights.herokuapp.com/api',
-});
+const baseURL = 'https://jsonplaceholder.typicode.com'
+const api = axios.create({ baseURL });
 
 export default api;
