@@ -2,16 +2,12 @@ import React from "react";
 import { View, TouchableOpacity, Text, ActivityIndicator } from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
 import Toast from "react-native-toast-message";
-import { withFormik, FormikProps, Formik, FormikConfig } from "formik";
+import { FormikProps, Formik } from "formik";
 import api from "../../services/api";
 import styles from "./styles";
 import * as Yup from "yup";
 import CustomInput from "../../components/CustomInput";
-import {
-	useNavigation,
-	NavigationProp,
-	ParamListBase,
-} from "@react-navigation/native";
+import { LoginProps } from "./../../routes/types";
 
 interface FormValues {
 	username: string;
@@ -66,8 +62,7 @@ const render = (props: FormikProps<Props>) => {
 	);
 };
 
-export default function () {
-	const navigation = useNavigation();
+export default function Login({ route, navigation }: LoginProps) {
 	return (
 		<Formik
 			initialValues={{
@@ -76,7 +71,6 @@ export default function () {
 				showPassword: false,
 			}}
 			onSubmit={async (values, formikBag) => {
-				const id = Math.ceil(Math.random() * 100);
 				try {
 					await api.post("/posts", {
 						headers: {
@@ -85,11 +79,11 @@ export default function () {
 						body: {
 							username: values.username,
 							password: values.password,
-							id,
 						},
 					});
+					const token = String(Math.ceil(Math.random() * 100));
 					formikBag.setSubmitting(false);
-					navigation.navigate("MeusVoos");
+					navigation.navigate("MeusVoos", { token });
 				} catch (err) {
 					console.log(err);
 					formikBag.setSubmitting(false);

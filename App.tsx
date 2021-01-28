@@ -1,6 +1,10 @@
 import React from "react";
-import { Routes } from "./src/routes";
-
+import { Routes } from "./src/routes/routes";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 export default function App() {
-	return <Routes />;
+	return (
+		<SafeAreaProvider>
+			<Routes />
+		</SafeAreaProvider>
+	);
 }
