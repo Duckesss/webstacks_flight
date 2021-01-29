@@ -66,26 +66,23 @@ export default function Login({ route, navigation }: LoginProps) {
 	return (
 		<Formik
 			initialValues={{
-				username: "",
-				password: "",
+				username: "admin",
+				password: "admin@123",
 				showPassword: false,
 			}}
 			onSubmit={async (values, formikBag) => {
 				try {
-					await api.post("/posts", {
-						headers: {
-							"Content-type": "application/json",
-						},
-						body: {
-							username: values.username,
-							password: values.password,
-						},
+					const response = await api.post("/login", {
+						username: values.username,
+						password: values.password,
 					});
-					const token = String(Math.ceil(Math.random() * 100));
+					console.log("RESPOSTA API", response.data);
+					const { token } = response.data;
 					formikBag.setSubmitting(false);
 					navigation.navigate("MeusVoos", { token });
 				} catch (err) {
-					console.log(err);
+					console.log("ERRO");
+					console.log(err.response?.data);
 					formikBag.setSubmitting(false);
 					Toast.show({
 						type: "error",
