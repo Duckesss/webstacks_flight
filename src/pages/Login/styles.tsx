@@ -1,55 +1,48 @@
-import { StyleSheet } from "react-native";
+import React, { useState } from "react";
+import { StyleSheet, View, TextInput } from "react-native";
+import { FontAwesome5 } from "@expo/vector-icons";
+import styled from "styled-components/native";
 
-export default StyleSheet.create({
-	container: {
-		justifyContent: "center",
-		alignItems: "center",
-		flex: 1,
-		padding: 70,
-	},
-	input: {
-		borderWidth: 2,
-		paddingHorizontal: 10,
-		height: 50,
-		backgroundColor: "#fff",
-		borderTopWidth: 0,
-		borderRightWidth: 0,
-		borderLeftWidth: 0,
-		borderColor: "#526888",
-		borderRadius: 10,
-		marginBottom: 10,
-	},
-	label: {
-		backgroundColor: "#fff",
-		paddingHorizontal: 5,
-		borderRadius: 5,
-	},
-	loading: {
-		backgroundColor: "rgba(0,0,0,0.3)",
-		position: "absolute",
-		top: 0,
-		right: 0,
-		bottom: 0,
-		left: 0,
-		zIndex: 1,
-	},
-	icon: {
-		fontSize: 30,
-		position: "absolute",
-		zIndex: 1,
-		width: 500,
-		color: "green",
-	},
-	errorLabel: {
-		marginTop: -5,
-		marginBottom: 10,
-		color: "#C94141",
-	},
-	button: {
-		alignItems: "center",
-		backgroundColor: "#DDDDDD",
-		borderRadius: 5,
-		padding: 10,
-		paddingHorizontal: 40,
-	},
-});
+const contentWidth = 80;
+const borderRadius = 7;
+
+export const Container = styled.KeyboardAvoidingView`
+	flex: 1;
+	align-items: center;
+	justify-content: center;
+`;
+export const InputBackground = styled.View`
+	flex-direction: row;
+`;
+export const Input = styled.TextInput.attrs({
+	placeholderTextColor: "#a8a8a8",
+})`
+	background: rgba(0, 0, 0, 0.2);
+	width: ${contentWidth}%;
+	font-size: 17px;
+	color: #fff;
+	margin-bottom: 15px;
+	padding: 13px;
+	border-radius: ${borderRadius}px;
+`;
+export const SubmitButton = styled.TouchableOpacity`
+	align-items: center;
+	justify-content: center;
+	background-color: #004071;
+	width: ${contentWidth - 30}%;
+	height: 45px;
+	border-radius: ${borderRadius}px;
+	margin-top: 10px;
+`;
+
+export const SubmitText = styled.Text`
+	font-size: 20px;
+	color: #fff;
+`;
+
+export const Logo = styled.Image`
+	width: 300px;
+	height: 160px;
+	top: -70px;
+	margin-bottom: -10px;
+`;
