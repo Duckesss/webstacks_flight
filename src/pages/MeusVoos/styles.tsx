@@ -1,12 +1,40 @@
+import styled from "styled-components/native";
 import { StyleSheet, Dimensions } from "react-native";
 const { width } = Dimensions.get("window");
-const grid = 2;
-const itemWidth = width / grid;
+const numberGrid = 2;
+const itemWidth = width / numberGrid;
 
+export const Container = styled.View`
+	flex: 1;
+`;
+
+export const Title = styled.Text`
+	padding: 20px;
+	font-size: 30px;
+	align-self: center;
+`;
+export const DefaultText = styled.Text`
+	text-align: center;
+	font-size: 40px;
+	color: black;
+	opacity: 0.5;
+`;
+export const LinkText = styled.Text`
+	font-size: 20px;
+	color: blue;
+	text-align: center;
+	opacity: 0.5;
+`;
+export const Link = styled.TouchableOpacity``;
+export const ListItem = styled.Text`
+	border: 1px solid black;
+	color: black;
+	width: ${itemWidth}px;
+	height: ${itemWidth}px;
+	padding: 30px;
+	flex: 1;
+`;
 export const styles = StyleSheet.create({
-	container: {
-		flex: 1,
-	},
 	listItem: {
 		borderWidth: 1,
 		borderColor: "black",
@@ -31,10 +59,6 @@ export const styles = StyleSheet.create({
 		color: "black",
 		opacity: 0.5,
 	},
-	title: {
-		padding: 20,
-		fontSize: 30,
-		alignSelf: "center",
-	},
 });
-export const numberGrid = grid;
+
+export const gridNumber = numberGrid;

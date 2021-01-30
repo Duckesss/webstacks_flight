@@ -1,6 +1,3 @@
-import React, { useState } from "react";
-import { StyleSheet, View, TextInput } from "react-native";
-import { FontAwesome5 } from "@expo/vector-icons";
 import styled from "styled-components/native";
 
 const contentWidth = 80;
