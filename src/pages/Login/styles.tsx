@@ -11,6 +11,11 @@ export const Container = styled.KeyboardAvoidingView`
 export const InputBackground = styled.View`
 	flex-direction: row;
 `;
+export const ErrorText = styled.Text`
+	color: red;
+	margin: -10px 0px 20px 0px;
+	font-size: 16px;
+`;
 export const Input = styled.TextInput.attrs({
 	placeholderTextColor: "#a8a8a8",
 })`
