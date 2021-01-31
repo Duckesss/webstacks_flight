@@ -5,6 +5,7 @@ type RootStackParamList = {
 	Login: undefined;
 	MeusVoos: { token: string };
 	BuscarVoos: { token: string };
+	PesquisarVoos: { token: string };
 };
 
 type LoginScreenRouteProp = RouteProp<RootStackParamList, "Login">;

@@ -5,14 +5,11 @@ import api from "../../services/api";
 import { gridNumber } from "./styles";
 import { MeusVoosProps } from "./../../routes/types";
 import { AxiosResponse } from "axios";
-import { Container, Title, DefaultText, LinkText, ListItem } from "./styles";
+import { DefaultText, LinkText, ListItem } from "./styles";
+import Container from "../../components/Container";
+import Title from "../../components/Title";
+import { ListaVoo } from "../../interfaces/ListaVoo";
 
-interface ListaVoo {
-	body: string;
-	id: number;
-	title: string;
-	userId: string;
-}
 export default function MeusVoos({ route, navigation }: MeusVoosProps) {
 	const [listaVoo, setListaVoo] = useState<ListaVoo[]>([]);
 	const [loading, setLoading] = useState<boolean>(true);
@@ -25,6 +22,7 @@ export default function MeusVoos({ route, navigation }: MeusVoosProps) {
 			setLoading(false);
 			setListaVoo(response.data);
 		}
+
 		getLista();
 	}, []);
 	return (
