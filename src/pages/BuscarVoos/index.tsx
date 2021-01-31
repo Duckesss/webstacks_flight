@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import { ListaVoo } from "../../interfaces/ListaVoo";
-import { BuscarVoosProps } from "./../../routes/types";
+import { NavigationProps } from "./../../routes/types";
 import { MaterialIcons } from "@expo/vector-icons";
 import Title from "../../components/Title";
 import { FloatingButton } from "./styles";
 import Container from "../../components/Container";
 
-export default function BuscarVoos({ route, navigation }: BuscarVoosProps) {
+export default function BuscarVoos({ navigation }: NavigationProps) {
 	const [listaVoo, setListaVoo] = useState<ListaVoo[]>([]);
 
 	return (

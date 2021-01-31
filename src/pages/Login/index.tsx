@@ -1,7 +1,8 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState } from "react";
 import { Platform } from "react-native";
 import Background from "../../components/Container";
 import Loading from "../../components/Loading";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import Toast from "react-native-toast-message";
 import { FormValues } from "./interfaces";
 import api from "../../services/api";
@@ -12,11 +13,10 @@ import {
 	Logo,
 	SubmitButton,
 	SubmitText,
-	ErrorText,
 } from "./styles";
-import { LoginProps } from "./../../routes/types";
+import { NavigationProps } from "./../../routes/types";
 
-export default function Login({ route, navigation }: LoginProps) {
+export default function Login({ navigation }: NavigationProps) {
 	const [campos, setCampos] = useState<FormValues>({
 		username: {
 			value: "",
@@ -28,7 +28,6 @@ export default function Login({ route, navigation }: LoginProps) {
 		},
 	});
 	const [loading, setLoading] = useState<boolean>(false);
-
 	return (
 		<Background pointerEvents={loading ? "none" : "auto"}>
 			<Container
@@ -95,10 +94,12 @@ export default function Login({ route, navigation }: LoginProps) {
 				password: password.value,
 			});
 			const { token } = response.data;
+			await AsyncStorage.setItem("@token", token);
 			setLoading(false);
-			navigation.navigate("MeusVoos", { token });
+			navigation.navigate("MeusVoos");
 		} catch (err) {
 			setLoading(false);
+			console.log(err.message || err || err.response?.data);
 			Toast.show({
 				type: "error",
 				text1: String(err.message || err || err.response?.data),

@@ -1,6 +1,6 @@
 import styled from "styled-components/native";
 
-export const Container = styled.View`
+export const LoadingContainer = styled.View`
 	position: absolute;
 	left: 0px;
 	right: 0px;

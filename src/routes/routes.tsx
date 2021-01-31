@@ -3,7 +3,6 @@ import { StatusBar } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { RootStackParamList } from "./types";
-import { LinearGradient } from "expo-linear-gradient";
 import { SafeAreaView } from "react-native-safe-area-context";
 const AppStack = createStackNavigator<RootStackParamList>();
 import Login from "../pages/Login";
@@ -25,12 +24,10 @@ export class Routes extends React.Component {
 							<AppStack.Screen name="Login" component={Login} />
 							<AppStack.Screen
 								name="MeusVoos"
-								initialParams={{ token: "" }}
 								component={MeusVoos}
 							/>
 							<AppStack.Screen
 								name="BuscarVoos"
-								initialParams={{ token: "" }}
 								component={BuscarVoos}
 							/>
 						</AppStack.Navigator>

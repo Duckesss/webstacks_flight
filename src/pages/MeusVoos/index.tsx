@@ -3,26 +3,28 @@ import { TouchableOpacity } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
 import api from "../../services/api";
 import { gridNumber } from "./styles";
-import { MeusVoosProps } from "./../../routes/types";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { NavigationProps } from "./../../routes/types";
 import { AxiosResponse } from "axios";
 import { DefaultText, LinkText, ListItem } from "./styles";
 import Container from "../../components/Container";
 import Title from "../../components/Title";
 import { ListaVoo } from "../../interfaces/ListaVoo";
 
-export default function MeusVoos({ route, navigation }: MeusVoosProps) {
+export default function MeusVoos({ navigation }: NavigationProps) {
 	const [listaVoo, setListaVoo] = useState<ListaVoo[]>([]);
 	const [loading, setLoading] = useState<boolean>(true);
+
 	navigation.addListener("beforeRemove", e => {
 		e.preventDefault();
 	});
 	useEffect(() => {
 		async function getLista() {
-			const response = await callApi(500, route.params.token);
-			setLoading(false);
+			const token = await AsyncStorage.getItem("@token");
+			const response = await callApi(500, token || "");
 			setListaVoo(response.data);
+			setLoading(false);
 		}
-
 		getLista();
 	}, []);
 	return (
@@ -44,12 +46,7 @@ export default function MeusVoos({ route, navigation }: MeusVoosProps) {
 					<Container>
 						<DefaultText>Você ainda não comprou voos.</DefaultText>
 						<TouchableOpacity
-							onPress={() => {
-								console.log("navigate");
-								navigation.navigate("BuscarVoos", {
-									token: route.params.token,
-								});
-							}}
+							onPress={() => navigation.navigate("BuscarVoos")}
 						>
 							<LinkText>Clique aqui para comprar um!</LinkText>
 						</TouchableOpacity>
@@ -63,6 +60,7 @@ function callApi(timeout: number, token: string): Promise<AxiosResponse> {
 	return new Promise((resolve, reject) => {
 		setTimeout(async () => {
 			try {
+				if (!token) throw "Token nao informado";
 				const response = await api.get("/my-flights", {
 					headers: { Authorization: token },
 				});
