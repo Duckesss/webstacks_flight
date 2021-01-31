@@ -1,31 +1,52 @@
+import React from "react";
 import styled from "styled-components/native";
-
+import { View, TextInput, TextInputProps, StyleSheet } from "react-native";
 const contentWidth = 80;
 const borderRadius = 7;
 
-export const Container = styled.KeyboardAvoidingView`
+const styles = StyleSheet.create({
+	inputArea: {
+		flexDirection: "row",
+	},
+	inputStyle: {
+		backgroundColor: "#000000",
+		fontSize: 17,
+		flex: 1,
+		color: "#fff",
+		marginBottom: 15,
+		padding: 13,
+		borderRadius: borderRadius,
+	},
+	center: {
+		justifyContent: "center",
+		alignItems: "center",
+		flex: 1,
+	},
+});
+export default styles;
+export function Input(props: TextInputProps) {
+	return (
+		<View style={styles.inputArea}>
+			<TextInput
+				autoCorrect={false}
+				placeholderTextColor="#a8a8a8"
+				style={styles.inputStyle}
+				{...props}
+			/>
+		</View>
+	);
+}
+
+export const LoginContainer = styled.KeyboardAvoidingView`
 	flex: 1;
 	align-items: center;
 	justify-content: center;
 `;
-export const InputBackground = styled.View`
-	flex-direction: row;
-`;
+
 export const ErrorText = styled.Text`
 	color: red;
 	margin: -10px 0px 20px 0px;
 	font-size: 16px;
-`;
-export const Input = styled.TextInput.attrs({
-	placeholderTextColor: "#a8a8a8",
-})`
-	background: rgba(0, 0, 0, 0.2);
-	width: ${contentWidth}%;
-	font-size: 17px;
-	color: #fff;
-	margin-bottom: 15px;
-	padding: 13px;
-	border-radius: ${borderRadius}px;
 `;
 export const SubmitButton = styled.TouchableOpacity`
 	align-items: center;

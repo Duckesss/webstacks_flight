@@ -2,6 +2,7 @@ import styled from "styled-components/native";
 
 export const LoadingContainer = styled.View`
 	position: absolute;
+	z-index: 1;
 	left: 0px;
 	right: 0px;
 	top: 0px;

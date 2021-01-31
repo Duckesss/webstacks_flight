@@ -1,12 +1,20 @@
 import styled from "styled-components/native";
-import React, { Component } from "react";
-import { View, Text } from "react-native";
+import React from "react";
+import {
+	View,
+	KeyboardAvoidingView,
+	Platform,
+	ViewProps,
+	KeyboardAvoidingViewProps,
+} from "react-native";
 import styles from "./styles";
 
-export default function Container(props: React.PropsWithChildren<any>) {
+export default function Container(props: React.PropsWithChildren<ViewProps>) {
 	return (
 		<View style={styles.background}>
-			<View style={styles.container}>{props.children}</View>
+			<View style={[styles.container, props.style]}>
+				{props.children}
+			</View>
 		</View>
 	);
 }
