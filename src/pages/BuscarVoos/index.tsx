@@ -3,7 +3,8 @@ import { Modal, Title, FloatingButton, Container } from "../../components";
 import { ListaVoo } from "../../interfaces/ListaVoo";
 import { NavigationProps } from "./../../routes/types";
 import { MaterialIcons } from "@expo/vector-icons";
-import { Input, SearchButton } from "./styles";
+import { Input, SearchButton, inputPadding } from "./styles";
+import { Text } from "react-native";
 
 export default function BuscarVoos({ navigation }: NavigationProps) {
 	const [listaVoo, setListaVoo] = useState<ListaVoo[]>([]);
@@ -20,11 +21,21 @@ export default function BuscarVoos({ navigation }: NavigationProps) {
 				transparent={true}
 				visible={pesquisarVoo}
 			>
-				<Input placeholder="Origin" />
-				<Input placeholder="Destination" />
-				<Input placeholder="Departure1" />
-				<Input placeholder="Passengers" />
-				<Input placeholder="Departure2" />
+				<Input placeholder="Aeroporto de origem" />
+				<Input placeholder="Aeroporto de destino" />
+				<Input placeholder="Data de saída" />
+				<Input placeholder="Número de passageiros" />
+				<Input placeholder="Data de volta" />
+				<Text
+					style={{
+						fontSize: 12,
+						marginTop: 5,
+						alignSelf: "flex-start",
+						paddingLeft: inputPadding,
+					}}
+				>
+					*Em caso de ida e volta
+				</Text>
 				<SearchButton onPress={() => console.log("void")} />
 			</Modal>
 		</Container>

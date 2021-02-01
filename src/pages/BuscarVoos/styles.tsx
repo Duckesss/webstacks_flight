@@ -9,10 +9,10 @@ import {
 } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 import { TouchableOpacity } from "react-native";
-
+export const inputPadding = 10;
 const styles = StyleSheet.create({
 	input: {
-		padding: 10,
+		padding: inputPadding,
 		borderBottomWidth: 1,
 		borderRadius: 10,
 		width: 300,
@@ -25,6 +25,7 @@ const styles = StyleSheet.create({
 	searchText: {
 		color: "#004071",
 		fontWeight: "bold",
+		fontSize: 20,
 		marginRight: 5,
 	},
 });
@@ -36,11 +37,7 @@ export function SearchButton(props: TouchableOpacityProps) {
 		<TouchableOpacity {...props}>
 			<View style={styles.searchContainer}>
 				<Text style={styles.searchText}>Pesquisar</Text>
-				<MaterialIcons
-					size={30}
-					color={"#004071"}
-					name="arrow-forward"
-				/>
+				<MaterialIcons size={40} color={"#004071"} name="send" />
 			</View>
 		</TouchableOpacity>
 	);
