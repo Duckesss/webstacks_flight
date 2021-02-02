@@ -1,20 +1,17 @@
 import React from "react";
-import { Modal, ModalBaseProps, View, ViewProps } from "react-native";
+import { Modal, ModalProps, View } from "react-native";
 import styles from "./styles";
 
 interface myModalProps {
 	position: "center" | "bottom" | "top";
-	containerStyle?: ViewProps;
 }
-type Props = React.PropsWithChildren<ModalBaseProps> & myModalProps;
+type Props = React.PropsWithChildren<ModalProps> & myModalProps;
 
 export default function FloatingButton(props: Props) {
 	return (
-		<Modal {...props}>
+		<Modal {...props} style={props.style}>
 			<View style={styles[props.position]}>
-				<View style={[styles.modalView, props.containerStyle]}>
-					{props.children}
-				</View>
+				<View style={[styles.modalView]}>{props.children}</View>
 			</View>
 		</Modal>
 	);

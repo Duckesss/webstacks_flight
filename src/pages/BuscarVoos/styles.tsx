@@ -10,12 +10,13 @@ import {
 import { MaterialIcons } from "@expo/vector-icons";
 import { TouchableOpacity } from "react-native";
 export const inputPadding = 10;
+const inputWidth = 300;
 const styles = StyleSheet.create({
 	input: {
 		padding: inputPadding,
 		borderBottomWidth: 1,
 		borderRadius: 10,
-		width: 300,
+		width: inputWidth,
 	},
 	searchContainer: {
 		flexDirection: "row",
@@ -27,6 +28,12 @@ const styles = StyleSheet.create({
 		fontWeight: "bold",
 		fontSize: 20,
 		marginRight: 5,
+	},
+	label: {
+		color: "#575757",
+		paddingHorizontal: inputPadding,
+		marginBottom: -inputPadding,
+		width: inputWidth,
 	},
 });
 
