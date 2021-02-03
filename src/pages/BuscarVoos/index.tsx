@@ -6,11 +6,14 @@ import {
 	Container,
 	Loading,
 	Select,
+	FakeInput,
 } from "../../components";
 import { ListaVoo } from "../../interfaces/ListaVoo";
 import { NavigationProps } from "./../../routes/types";
 import { Picker } from "@react-native-picker/picker";
+import DateTimePicker from "@react-native-community/datetimepicker";
 import { MaterialIcons } from "@expo/vector-icons";
+import { DateTime } from "luxon";
 import styles, { Input, SearchButton, inputPadding } from "./styles";
 import { Text } from "react-native";
 import api from "../../services/api";
@@ -36,9 +39,14 @@ async function getAeroportos() {
 		return [];
 	}
 }
-
+interface ViewController {
+	modal: boolean;
+	calendario: boolean;
+	loading: boolean;
+}
 export default function BuscarVoos({ navigation }: NavigationProps) {
 	const [listaVoo, setListaVoo] = useState<ListaVoo[]>([]);
+	const [dataSelecionada, setDataSelecionada] = useState<Date>(new Date());
 	const [campos, setCampos] = useState<Campos>({
 		origem: "",
 		destino: "",
@@ -46,23 +54,26 @@ export default function BuscarVoos({ navigation }: NavigationProps) {
 		numPassageiros: "",
 		volta: "",
 	});
+	const [viewController, setViewController] = useState<ViewController>({
+		modal: false,
+		calendario: false,
+		loading: false,
+	});
 	const [listaAeroportos, setListaAeroportos] = useState<Aeroporto[]>([]);
-	const [abreModal, setAbreModal] = useState<boolean>(false);
-	const [loading, setLoading] = useState<boolean>(false);
 	const [buscaAeroportos, setBuscaAeroportos] = useState<boolean>(true);
 	return (
-		<Container pointerEvents={loading ? "none" : "auto"}>
+		<Container pointerEvents={viewController.loading ? "none" : "auto"}>
 			<Title>Buscar Voos</Title>
-			{loading && <Loading />}
+			{viewController.loading && <Loading />}
 			<FloatingButton
 				onPress={async () => {
-					setLoading(true);
+					setViewController({ ...viewController, loading: true });
 					if (buscaAeroportos === true) {
 						setListaAeroportos(await getAeroportos());
 						setBuscaAeroportos(false);
 					}
-					setLoading(false);
-					setAbreModal(true);
+					setViewController({ ...viewController, loading: false });
+					setViewController({ ...viewController, modal: true });
 				}}
 			>
 				<MaterialIcons size={30} color={"#004071"} name="search" />
@@ -72,11 +83,13 @@ export default function BuscarVoos({ navigation }: NavigationProps) {
 				position="bottom"
 				animationType="slide"
 				transparent={true}
-				visible={abreModal}
-				onRequestClose={() => setAbreModal(false)}
+				visible={viewController.modal}
+				onRequestClose={() =>
+					setViewController({ ...viewController, modal: false })
+				}
 			>
 				<Select
-					key={campos.origem}
+					key={`${campos.origem}_origem`}
 					selectedValue={campos.origem}
 					labelText="Aeroporto de origem:"
 					labelProps={{
@@ -98,8 +111,8 @@ export default function BuscarVoos({ navigation }: NavigationProps) {
 				</Select>
 				<Select
 					labelText="Aeroporto de destino:"
+					key={`${campos.destino}_destino`}
 					selectedValue={campos.destino}
-					key={campos.destino}
 					labelProps={{
 						style: styles.label,
 					}}
@@ -117,7 +130,49 @@ export default function BuscarVoos({ navigation }: NavigationProps) {
 						)
 					)}
 				</Select>
-				<Input placeholder="Data de saída" />
+
+				{viewController.calendario && (
+					<DateTimePicker
+						value={dataSelecionada}
+						minimumDate={new Date()}
+						onChange={(
+							event: any,
+							selectedDate: Date | undefined
+						) => {
+							const date = selectedDate || dataSelecionada;
+							let novaData = `${pad(date.getDate())}/${pad(
+								date.getMonth() + 1
+							)}/${date.getFullYear()}`;
+							setViewController({
+								...viewController,
+								calendario: false,
+							});
+							setCampos({
+								...campos,
+								saida: novaData,
+							});
+							setDataSelecionada(date);
+						}}
+					/>
+				)}
+
+				<FakeInput
+					placeholder="Data de saída"
+					placeholderColor="#575757"
+					value={campos.saida}
+					style={[
+						styles.input,
+						{
+							borderColor: "#838383",
+						},
+					]}
+					onPress={() => {
+						setViewController({
+							...viewController,
+							calendario: true,
+						});
+					}}
+				/>
 				<Input placeholder="Número de passageiros" />
 				<Input placeholder="Data de volta" />
 				<Text
@@ -134,4 +189,8 @@ export default function BuscarVoos({ navigation }: NavigationProps) {
 			</Modal>
 		</Container>
 	);
+}
+
+function pad(value: number) {
+	return value > 9 ? value : "0" + value;
 }

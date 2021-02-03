@@ -21,7 +21,7 @@ export default StyleSheet.create({
 		backgroundColor: "white",
 		borderRadius: 20,
 		padding: 50,
-		height: 600,
+		height: 500,
 		width: 400,
 		alignItems: "center",
 		shadowColor: "#000",
