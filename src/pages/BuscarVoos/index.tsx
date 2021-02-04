@@ -13,7 +13,6 @@ import { NavigationProps } from "./../../routes/types";
 import { Picker } from "@react-native-picker/picker";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { MaterialIcons } from "@expo/vector-icons";
-import { DateTime } from "luxon";
 import styles, { Input, SearchButton, inputPadding } from "./styles";
 import { Text } from "react-native";
 import api from "../../services/api";
@@ -41,12 +40,14 @@ async function getAeroportos() {
 }
 interface ViewController {
 	modal: boolean;
-	calendario: boolean;
+	calendarioSaida: boolean;
 	loading: boolean;
+	calendarioVolta: boolean;
 }
 export default function BuscarVoos({ navigation }: NavigationProps) {
 	const [listaVoo, setListaVoo] = useState<ListaVoo[]>([]);
-	const [dataSelecionada, setDataSelecionada] = useState<Date>(new Date());
+	const [dataSaida, setDataSaida] = useState<Date>(new Date());
+	const [dataVolta, setDataVolta] = useState<Date>(new Date());
 	const [campos, setCampos] = useState<Campos>({
 		origem: "",
 		destino: "",
@@ -56,8 +57,9 @@ export default function BuscarVoos({ navigation }: NavigationProps) {
 	});
 	const [viewController, setViewController] = useState<ViewController>({
 		modal: false,
-		calendario: false,
+		calendarioSaida: false,
 		loading: false,
+		calendarioVolta: false,
 	});
 	const [listaAeroportos, setListaAeroportos] = useState<Aeroporto[]>([]);
 	const [buscaAeroportos, setBuscaAeroportos] = useState<boolean>(true);
@@ -78,7 +80,12 @@ export default function BuscarVoos({ navigation }: NavigationProps) {
 			>
 				<MaterialIcons size={30} color={"#004071"} name="search" />
 			</FloatingButton>
+			{modalPesquisarVoos()}
+		</Container>
+	);
 
+	function modalPesquisarVoos() {
+		return (
 			<Modal
 				position="bottom"
 				animationType="slide"
@@ -131,27 +138,29 @@ export default function BuscarVoos({ navigation }: NavigationProps) {
 					)}
 				</Select>
 
-				{viewController.calendario && (
+				{viewController.calendarioSaida && (
 					<DateTimePicker
-						value={dataSelecionada}
+						value={dataSaida}
 						minimumDate={new Date()}
 						onChange={(
 							event: any,
 							selectedDate: Date | undefined
 						) => {
-							const date = selectedDate || dataSelecionada;
-							let novaData = `${pad(date.getDate())}/${pad(
-								date.getMonth() + 1
-							)}/${date.getFullYear()}`;
-							setViewController({
-								...viewController,
-								calendario: false,
-							});
-							setCampos({
-								...campos,
-								saida: novaData,
-							});
-							setDataSelecionada(date);
+							if (selectedDate) {
+								const date = selectedDate;
+								let novaData = `${pad(date.getDate())}/${pad(
+									date.getMonth() + 1
+								)}/${date.getFullYear()}`;
+								setViewController({
+									...viewController,
+									calendarioSaida: false,
+								});
+								setCampos({
+									...campos,
+									saida: novaData,
+								});
+								setDataSaida(date);
+							}
 						}}
 					/>
 				)}
@@ -169,12 +178,69 @@ export default function BuscarVoos({ navigation }: NavigationProps) {
 					onPress={() => {
 						setViewController({
 							...viewController,
-							calendario: true,
+							calendarioSaida: true,
 						});
 					}}
 				/>
-				<Input placeholder="Número de passageiros" />
-				<Input placeholder="Data de volta" />
+				<Input
+					value={campos.numPassageiros}
+					placeholder="Número de passageiros (1 a 9)"
+					keyboardType={"numeric"}
+					onChangeText={(text: string) => {
+						text = text.replace(/[^\d]/g, "");
+						if (Number(text) > 9) text = text[0];
+
+						setCampos({
+							...campos,
+							numPassageiros: text,
+						});
+					}}
+				/>
+
+				{viewController.calendarioVolta && (
+					<DateTimePicker
+						value={dataVolta}
+						minimumDate={new Date()}
+						onChange={(
+							event: any,
+							selectedDate: Date | undefined
+						) => {
+							if (selectedDate) {
+								const date = selectedDate;
+								let novaData = `${pad(date.getDate())}/${pad(
+									date.getMonth() + 1
+								)}/${date.getFullYear()}`;
+								setViewController({
+									...viewController,
+									calendarioVolta: false,
+								});
+								setCampos({
+									...campos,
+									volta: novaData,
+								});
+								setDataVolta(date);
+							}
+						}}
+					/>
+				)}
+
+				<FakeInput
+					placeholder="Data de volta"
+					placeholderColor="#575757"
+					value={campos.volta}
+					style={[
+						styles.input,
+						{
+							borderColor: "#838383",
+						},
+					]}
+					onPress={() => {
+						setViewController({
+							...viewController,
+							calendarioVolta: true,
+						});
+					}}
+				/>
 				<Text
 					style={{
 						fontSize: 12,
@@ -187,8 +253,8 @@ export default function BuscarVoos({ navigation }: NavigationProps) {
 				</Text>
 				<SearchButton onPress={() => console.log("void")} />
 			</Modal>
-		</Container>
-	);
+		);
+	}
 }
 
 function pad(value: number) {

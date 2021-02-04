@@ -5,13 +5,13 @@ interface InputFake {
 	placeholder: string;
 	placeholderColor: string;
 	placeholderSize?: number;
-	value: string;
+	value?: string;
 }
 type FakeInputProps = TouchableOpacityProps & InputFake;
 export default function FakeInput(props: FakeInputProps) {
 	return (
 		<TouchableOpacity {...props} activeOpacity={1.0} style={[props.style]}>
-			{props.value === "" ? (
+			{!props.value ? (
 				<Text
 					style={{
 						color: props.placeholderColor,
