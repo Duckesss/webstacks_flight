@@ -1,7 +1,9 @@
 
 export interface ListaVoo {
-    body: string;
-    id: number;
-    title: string;
-    userId: string;
+    departure1: string;
+    passengers: number;
+    faresMoney: number;
+    destination: {
+        city: string;
+    }
 }

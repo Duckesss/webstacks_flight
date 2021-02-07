@@ -4,6 +4,12 @@ const { width } = Dimensions.get("window");
 const numberGrid = 2;
 const itemWidth = width / numberGrid;
 
+export default StyleSheet.create({
+	container: {
+		marginTop: 50
+	}
+})
+
 export const Container = styled.View`
 	flex: 1;
 	padding: 30px;
@@ -23,8 +29,8 @@ export const LinkText = styled.Text`
 `;
 export const Link = styled.TouchableOpacity``;
 export const ListItem = styled.Text`
-	border: 1px solid black;
-	color: black;
+	border: 1px solid #b8b8b8;
+	color: #b3b3b3;
 	width: ${itemWidth}px;
 	height: ${itemWidth}px;
 	padding: 30px;

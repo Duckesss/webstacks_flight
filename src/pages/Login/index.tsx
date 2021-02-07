@@ -22,11 +22,11 @@ export interface FormValues {
 export default function Login({ navigation }: NavigationProps) {
 	const [campos, setCampos] = useState<FormValues>({
 		username: {
-			value: "",
+			value: "admin",
 			required: true,
 		},
 		password: {
-			value: "",
+			value: "admin@123",
 			required: true,
 		},
 	});

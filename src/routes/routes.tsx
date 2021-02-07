@@ -18,7 +18,7 @@ export class Routes extends React.Component {
 				<SafeAreaView style={{ flex: 1, backgroundColor: "#131313" }}>
 					<NavigationContainer>
 						<AppStack.Navigator
-							initialRouteName="BuscarVoos"
+							initialRouteName="Login"
 							screenOptions={{ headerShown: false }}
 						>
 							<AppStack.Screen name="Login" component={Login} />

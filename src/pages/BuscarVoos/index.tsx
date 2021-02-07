@@ -65,7 +65,7 @@ export default function BuscarVoos({ navigation }: NavigationProps) {
 	const [buscaAeroportos, setBuscaAeroportos] = useState<boolean>(true);
 	return (
 		<Container pointerEvents={viewController.loading ? "none" : "auto"}>
-			<Title>Buscar Voos</Title>
+			<Title>Buscar Vôos</Title>
 			{viewController.loading && <Loading />}
 			<FloatingButton
 				onPress={async () => {
@@ -251,7 +251,7 @@ export default function BuscarVoos({ navigation }: NavigationProps) {
 				>
 					*Em caso de ida e volta
 				</Text>
-				<SearchButton onPress={() => console.log("void")} />
+				<SearchButton style={{marginTop:10}} onPress={() => console.log("void")} />
 			</Modal>
 		);
 	}
