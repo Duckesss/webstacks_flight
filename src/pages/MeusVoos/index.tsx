@@ -1,16 +1,17 @@
 import React, { useState, useEffect } from "react";
-import { TouchableOpacity, Text } from "react-native";
+import { TouchableOpacity, Text, View } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
 import api from "../../services/api";
 import { gridNumber } from "./styles";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { NavigationProps } from "./../../routes/types";
-import { AxiosResponse } from "axios";
 import styles, { DefaultText, LinkText } from "./styles";
 import Container from "../../components/Container";
-import {Title, ListItem} from "../../components";
+import {Title, ListItem, FloatingButton} from "../../components";
 import { ListaVoo } from "../../interfaces/ListaVoo";
 import { format,parseISO } from "date-fns";
+import { AxiosResponse } from "axios";
+import { MaterialIcons } from "@expo/vector-icons";
 
 export default function MeusVoos({ navigation }: NavigationProps) {
 	const [listaVoo, setListaVoo] = useState<ListaVoo[]>([]);
@@ -42,20 +43,29 @@ export default function MeusVoos({ navigation }: NavigationProps) {
 						data={listaVoo}
 						numColumns={gridNumber}
 						key={gridNumber}
-						renderItem={voo => <ListItem>
-							<Text style={{color: "white"}}>
-								Preço: {moneyBR(voo.item.faresMoney)}
-							</Text>
-							<Text style={{color: "white"}}>
-								Passageiros: {voo.item.passengers}
-							</Text>
-							<Text style={{color: "white"}}>
-								Saída: {format(parseISO(voo.item.departure1), "dd/MM/yyyy")}
-							</Text>
-							<Text style={{color: "white"}}>
-								Destino: {voo.item.destination.city}
-							</Text>
-						</ListItem>}
+						renderItem={voo => 
+							<ListItem>
+								<View style={styles.title}>
+									<Text style={{color: "white", fontSize: 20}}>
+										{voo.item.destination.city}	
+									</Text>
+								</View>
+								<View style={styles.content}>
+									<Text style={{color: "white", fontSize: 16}}>
+										Preço: {moneyBR(voo.item.faresMoney)}
+									</Text>
+									<Text style={{color: "white", fontSize: 16}}>
+										Confirmados: {voo.item.passengers}
+									</Text>
+									<Text style={{color: "white", fontSize: 16}}>
+										Espaços livres: {voo.item.totalPassengers - voo.item.passengers}
+									</Text>
+									<Text style={{color: "white", fontSize: 16}}>
+										Saída: {format(parseISO(voo.item.departure1), "dd/MM/yyyy")}
+									</Text>
+								</View>
+							</ListItem>
+						}
 					/>
 				) : (
 					<Container>
@@ -63,11 +73,19 @@ export default function MeusVoos({ navigation }: NavigationProps) {
 						<TouchableOpacity
 							onPress={() => navigation.navigate("BuscarVoos")}
 						>
-							<LinkText>Clique aqui para comprar um!</LinkText>
+							<LinkText>Clique aqui ou no carrinho para comprar um!</LinkText>
 						</TouchableOpacity>
 					</Container>
 				);
 			})(navigation)}
+			
+			<FloatingButton
+				onPress={async () => {
+					setLoading(true)
+				}}
+			>
+				<MaterialIcons size={30} color={"#004071"} name="shopping-cart" />
+			</FloatingButton>
 		</Container>
 	);
 }

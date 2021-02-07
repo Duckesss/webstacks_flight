@@ -7,6 +7,15 @@ const itemWidth = width / numberGrid;
 export default StyleSheet.create({
 	container: {
 		marginTop: 50
+	},
+	title:{
+		justifyContent:"center",
+		alignItems:"center",
+	},
+	content:{
+		justifyContent: "flex-end",
+		alignItems:"flex-end",
+		flex:1
 	}
 })
 

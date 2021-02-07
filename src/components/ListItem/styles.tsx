@@ -11,8 +11,6 @@ export default StyleSheet.create({
 		height: itemWidth,
 		padding: 15,
 		flex: 1,
-		alignItems:"flex-end",
-		justifyContent: "flex-end",
 	},
 	text: {
 	},
