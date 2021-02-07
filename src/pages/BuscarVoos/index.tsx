@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
 	Modal,
 	Title,
@@ -44,7 +44,7 @@ interface ViewController {
 	loading: boolean;
 	calendarioVolta: boolean;
 }
-export default function BuscarVoos({ navigation }: NavigationProps) {
+export default function BuscarVoos({ navigation, route }: NavigationProps) {
 	const [listaVoo, setListaVoo] = useState<ListaVoo[]>([]);
 	const [dataSaida, setDataSaida] = useState<Date>(new Date());
 	const [dataVolta, setDataVolta] = useState<Date>(new Date());
@@ -56,25 +56,29 @@ export default function BuscarVoos({ navigation }: NavigationProps) {
 		volta: "",
 	});
 	const [viewController, setViewController] = useState<ViewController>({
-		modal: false,
+		modal: route.params.modal,
 		calendarioSaida: false,
 		loading: false,
 		calendarioVolta: false,
 	});
 	const [listaAeroportos, setListaAeroportos] = useState<Aeroporto[]>([]);
 	const [buscaAeroportos, setBuscaAeroportos] = useState<boolean>(true);
+	useEffect(() => {
+		if(viewController.modal && buscaAeroportos === true){	
+			setViewController({ ...viewController, loading: true });
+				getAeroportos().then(aeroportos => {
+					setListaAeroportos(aeroportos);
+					setBuscaAeroportos(false);
+					setViewController({ ...viewController, loading: false });
+				})
+		}
+	},[viewController.modal])
 	return (
 		<Container pointerEvents={viewController.loading ? "none" : "auto"}>
-			<Title>Buscar Vôos</Title>
+			<Title>Buscar Voos</Title>
 			{viewController.loading && <Loading />}
 			<FloatingButton
 				onPress={async () => {
-					setViewController({ ...viewController, loading: true });
-					if (buscaAeroportos === true) {
-						setListaAeroportos(await getAeroportos());
-						setBuscaAeroportos(false);
-					}
-					setViewController({ ...viewController, loading: false });
 					setViewController({ ...viewController, modal: true });
 				}}
 			>
