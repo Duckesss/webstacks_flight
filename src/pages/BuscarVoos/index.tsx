@@ -8,6 +8,7 @@ import {
 	Select,
 	FakeInput,
 } from "../../components";
+import Toast from "react-native-toast-message";
 import { ListaVoo } from "../../interfaces/ListaVoo";
 import { NavigationProps } from "./../../routes/types";
 import { Picker } from "@react-native-picker/picker";
@@ -255,7 +256,24 @@ export default function BuscarVoos({ navigation, route }: NavigationProps) {
 				>
 					*Em caso de ida e volta
 				</Text>
-				<SearchButton style={{marginTop:10}} onPress={() => console.log("void")} />
+				<SearchButton 
+					style={{marginTop:10}}
+					onPress={() => {
+						const camposVazios = Object.entries(campos).some(campo => {
+							if(campo[0] !== "volta")
+								return campo[1] === ""
+						})
+						if(camposVazios){
+							Toast.show({
+								type: "error",
+								text1: "Preencha os campos corretamente!",
+								topOffset: 50,
+							});
+						}else{
+							
+						}
+					}} 
+				/>
 			</Modal>
 		);
 	}
