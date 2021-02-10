@@ -7,6 +7,7 @@ import {
 	Loading,
 	Select,
 	FakeInput,
+	VooList
 } from "../../components";
 import Toast from "react-native-toast-message";
 import { ListaVoo } from "../../interfaces/ListaVoo";
@@ -16,7 +17,7 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import { MaterialIcons } from "@expo/vector-icons";
 import styles, { Input, SearchButton, inputPadding } from "./styles";
 import { Text } from "react-native";
-import api from "../../services/api";
+import api from "../../services";
 interface Aeroporto {
 	code: string;
 	name: string;
@@ -86,6 +87,14 @@ export default function BuscarVoos({ navigation, route }: NavigationProps) {
 				<MaterialIcons size={30} color={"#004071"} name="search" />
 			</FloatingButton>
 			{modalPesquisarVoos()}
+			{
+				listaVoo.length ? (
+					<VooList
+						gridNumber={3}
+						listaVoo={listaVoo}
+					/>
+				) : (false)
+			}
 		</Container>
 	);
 
@@ -128,9 +137,9 @@ export default function BuscarVoos({ navigation, route }: NavigationProps) {
 					labelProps={{
 						style: styles.label,
 					}}
-					onValueChange={(value: any) =>
+					onValueChange={(value: any) =>{
 						setCampos({ ...campos, destino: String(value) })
-					}
+					}}
 				>
 					{listaAeroportos.map(
 						(aeroporto: Aeroporto, idx: number) => (
@@ -258,7 +267,7 @@ export default function BuscarVoos({ navigation, route }: NavigationProps) {
 				</Text>
 				<SearchButton 
 					style={{marginTop:10}}
-					onPress={() => {
+					onPress={async () => {
 						const camposVazios = Object.entries(campos).some(campo => {
 							if(campo[0] !== "volta")
 								return campo[1] === ""
@@ -270,7 +279,16 @@ export default function BuscarVoos({ navigation, route }: NavigationProps) {
 								topOffset: 50,
 							});
 						}else{
-							
+							setViewController({...viewController,loading: true, modal: false})
+							const response = await api.get(`/search/?
+								origin=${campos.origem}
+								&destination=${campos.destino}
+								&departure1=${formataData(campos.saida)}
+								&passengers=${campos.numPassageiros}
+							`)
+							console.log(response.data)
+							setListaVoo(response.data)
+							setViewController({...viewController,loading: false, modal: false})
 						}
 					}} 
 				/>
@@ -281,4 +299,8 @@ export default function BuscarVoos({ navigation, route }: NavigationProps) {
 
 function pad(value: number) {
 	return value > 9 ? value : "0" + value;
+}
+function formataData(data : string) : string{
+	const[dia,mes,ano] = data.split('/')
+	return `${ano}/${mes}/${dia}`
 }

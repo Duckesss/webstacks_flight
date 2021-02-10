@@ -1,9 +1,8 @@
 import React, { useState } from "react";
-import { Platform } from "react-native";
 import { Loading, Container } from "../../components";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Toast from "react-native-toast-message";
-import api from "../../services/api";
+import api from "../../services";
 import styles, { Input, Logo, SubmitButton, SubmitText } from "./styles";
 import { NavigationProps } from "./../../routes/types";
 
