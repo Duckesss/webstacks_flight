@@ -1,5 +1,5 @@
 import React from "react";
-import { Text, View } from "react-native";
+import { Text, TouchableOpacityProps, View, ViewProps, TouchableOpacity } from "react-native";
 import { FlatList, } from "react-native-gesture-handler";
 import { ListaVoo } from "../../interfaces/ListaVoo";
 import styles from "./styles";
@@ -9,6 +9,8 @@ import { format,parseISO } from "date-fns";
 interface ListaVooProps{
     listaVoo:ListaVoo[];
     gridNumber: number;
+    acao:boolean
+    onPress?: () => void
 }
 
 export default function VooList(props : ListaVooProps){
@@ -25,7 +27,7 @@ export default function VooList(props : ListaVooProps){
                             {voo.item.destination.city}	
                         </Text>
                     </View>
-                    <View style={styles.content}>
+                    <VooContainer acao={props.acao} onPress={props.onPress} style={styles.content}>
                         <Text style={{color: "white", fontSize: 16}}>
                             Preço: {moneyBR(voo.item.faresMoney)}
                         </Text>
@@ -38,10 +40,32 @@ export default function VooList(props : ListaVooProps){
                         <Text style={{color: "white", fontSize: 16}}>
                             Saída: {format(parseISO(voo.item.departure1), "dd/MM/yyyy")}
                         </Text>
-                    </View>
+                    </VooContainer>
                 </View>
             )
         }
     />
+}
+
+interface VooContainerInterface{
+    acao:boolean
+    onPress?: () => void
+}
+
+type PropsVooContainer = React.PropsWithChildren<ViewProps|TouchableOpacityProps> & VooContainerInterface
+function VooContainer(props : PropsVooContainer){
+    if(props.acao){
+        return (
+            <TouchableOpacity style={props.style} onPress={props.onPress}>
+                {props.children}
+            </TouchableOpacity>
+        )
+    }else{
+        return (
+            <View style={props.style}>
+                {props.children}
+            </View>
+        )
+    }
 }
 

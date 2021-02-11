@@ -91,7 +91,11 @@ export default function BuscarVoos({ navigation, route }: NavigationProps) {
 				listaVoo.length ? (
 					<VooList
 						gridNumber={3}
+						acao={true}
 						listaVoo={listaVoo}
+						onPress={function(){
+							console.log('void')
+						}}
 					/>
 				) : (false)
 			}
@@ -286,7 +290,6 @@ export default function BuscarVoos({ navigation, route }: NavigationProps) {
 								&departure1=${formataData(campos.saida)}
 								&passengers=${campos.numPassageiros}
 							`)
-							console.log(response.data)
 							setListaVoo(response.data)
 							setViewController({...viewController,loading: false, modal: false})
 						}

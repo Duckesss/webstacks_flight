@@ -37,6 +37,7 @@ export default function MeusVoos({ navigation }: NavigationProps) {
 					listaVoo.length? (
 						<VooList
 							gridNumber={gridNumber}
+							acao={false}
 							listaVoo={listaVoo}
 						/>
 					) : (
