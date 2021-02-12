@@ -10,7 +10,7 @@ interface ListaVooProps{
     listaVoo:ListaVoo[];
     gridNumber: number;
     acao:boolean
-    onPress?: () => void
+    onPress?: (voo : ListaVoo) => void
 }
 
 export default function VooList(props : ListaVooProps){
@@ -21,13 +21,13 @@ export default function VooList(props : ListaVooProps){
         numColumns={props.gridNumber}
         key={props.gridNumber}
         renderItem={voo => (
-                <View style={styles.background}>
+                <VooContainer acao={props.acao} onPress={() => props.onPress && props.onPress(voo.item)}  style={styles.background}>
                     <View style={styles.title}>
                         <Text style={{color: "white", fontSize: 20}}>
                             {voo.item.destination.city}	
                         </Text>
                     </View>
-                    <VooContainer acao={props.acao} onPress={props.onPress} style={styles.content}>
+                    <View style={styles.content}>
                         <Text style={{color: "white", fontSize: 16}}>
                             Preço: {moneyBR(voo.item.faresMoney)}
                         </Text>
@@ -40,8 +40,8 @@ export default function VooList(props : ListaVooProps){
                         <Text style={{color: "white", fontSize: 16}}>
                             Saída: {format(parseISO(voo.item.departure1), "dd/MM/yyyy")}
                         </Text>
-                    </VooContainer>
-                </View>
+                    </View>
+                </VooContainer>
             )
         }
     />
@@ -51,7 +51,6 @@ interface VooContainerInterface{
     acao:boolean
     onPress?: () => void
 }
-
 type PropsVooContainer = React.PropsWithChildren<ViewProps|TouchableOpacityProps> & VooContainerInterface
 function VooContainer(props : PropsVooContainer){
     if(props.acao){

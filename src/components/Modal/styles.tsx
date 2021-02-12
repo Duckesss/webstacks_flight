@@ -17,6 +17,9 @@ export default StyleSheet.create({
 		justifyContent: "flex-start",
 		alignItems: "center",
 	},
+	background: {
+		backgroundColor:"rgba(0,0,0,0.5)"
+	},
 	modalView: {
 		backgroundColor: "white",
 		borderRadius: 20,

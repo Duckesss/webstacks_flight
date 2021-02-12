@@ -12,11 +12,12 @@ import {
 import Toast from "react-native-toast-message";
 import { ListaVoo } from "../../interfaces/ListaVoo";
 import { NavigationProps } from "./../../routes/types";
+import Utils from "../../Utils";
 import { Picker } from "@react-native-picker/picker";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { MaterialIcons } from "@expo/vector-icons";
 import styles, { Input, SearchButton, inputPadding } from "./styles";
-import { Text } from "react-native";
+import { Text, View, TouchableOpacity } from "react-native";
 import api from "../../services";
 interface Aeroporto {
 	code: string;
@@ -43,11 +44,13 @@ async function getAeroportos() {
 interface ViewController {
 	modal: boolean;
 	calendarioSaida: boolean;
+	modalConfirmar: boolean;
 	loading: boolean;
 	calendarioVolta: boolean;
 }
 export default function BuscarVoos({ navigation, route }: NavigationProps) {
 	const [listaVoo, setListaVoo] = useState<ListaVoo[]>([]);
+	const [selectedVoo, setSelectedVoo] = useState<ListaVoo>({} as ListaVoo);
 	const [dataSaida, setDataSaida] = useState<Date>(new Date());
 	const [dataVolta, setDataVolta] = useState<Date>(new Date());
 	const [campos, setCampos] = useState<Campos>({
@@ -61,6 +64,7 @@ export default function BuscarVoos({ navigation, route }: NavigationProps) {
 		modal: route.params.modal,
 		calendarioSaida: false,
 		loading: false,
+		modalConfirmar: false,
 		calendarioVolta: false,
 	});
 	const [listaAeroportos, setListaAeroportos] = useState<Aeroporto[]>([]);
@@ -74,6 +78,7 @@ export default function BuscarVoos({ navigation, route }: NavigationProps) {
 					setViewController({ ...viewController, loading: false });
 				})
 		}
+		return () => {setBuscaAeroportos(true);}
 	},[viewController.modal])
 	return (
 		<Container pointerEvents={viewController.loading ? "none" : "auto"}>
@@ -86,6 +91,7 @@ export default function BuscarVoos({ navigation, route }: NavigationProps) {
 			>
 				<MaterialIcons size={30} color={"#004071"} name="search" />
 			</FloatingButton>
+			{modalConfirmarCompra()}
 			{modalPesquisarVoos()}
 			{
 				listaVoo.length ? (
@@ -93,14 +99,65 @@ export default function BuscarVoos({ navigation, route }: NavigationProps) {
 						gridNumber={3}
 						acao={true}
 						listaVoo={listaVoo}
-						onPress={function(){
-							console.log('void')
+						onPress={function(voo : ListaVoo){
+							setSelectedVoo(voo)
+							setViewController({ ...viewController, modalConfirmar: true });
 						}}
 					/>
 				) : (false)
 			}
 		</Container>
 	);
+
+	function modalConfirmarCompra(){
+		return (
+			<Modal
+				position="center"
+				animationType="slide"
+				containerStyle={{
+					width:300,
+					height:110,
+					padding:15,
+				}}
+				visible={viewController.modalConfirmar}
+				onRequestClose={() =>
+					setViewController({ ...viewController, modalConfirmar: false })
+				}
+			>
+				<Text style={{
+					fontSize: 21,
+					marginBottom:10
+				}}>
+					Deseja confirmar a compra?
+				</Text>
+				<View style={styles.row}>
+					<TouchableOpacity 
+						style={[styles.button,styles.confirmar]}
+						onPress={() => {
+							console.log('confirmar')
+							console.log(selectedVoo)
+						}}
+					>
+						<Text style={styles.buttonText}>
+							Confirmar
+						</Text>
+					</TouchableOpacity>
+					<TouchableOpacity 
+						style={[styles.button,styles.cancelar]}
+						onPress={() => {
+							setViewController({...viewController,modalConfirmar:false})
+						}}
+					>
+						<Text style={styles.buttonText}>
+							Cancelar
+						</Text>
+					</TouchableOpacity>
+
+
+				</View>
+			</Modal>
+		);
+	}
 
 	function modalPesquisarVoos() {
 		return (
@@ -166,7 +223,7 @@ export default function BuscarVoos({ navigation, route }: NavigationProps) {
 						) => {
 							if (selectedDate) {
 								const date = selectedDate;
-								let novaData = `${pad(date.getDate())}/${pad(
+								let novaData = `${Utils.pad(date.getDate())}/${Utils.pad(
 									date.getMonth() + 1
 								)}/${date.getFullYear()}`;
 								setViewController({
@@ -225,7 +282,7 @@ export default function BuscarVoos({ navigation, route }: NavigationProps) {
 						) => {
 							if (selectedDate) {
 								const date = selectedDate;
-								let novaData = `${pad(date.getDate())}/${pad(
+								let novaData = `${Utils.pad(date.getDate())}/${Utils.pad(
 									date.getMonth() + 1
 								)}/${date.getFullYear()}`;
 								setViewController({
@@ -287,7 +344,7 @@ export default function BuscarVoos({ navigation, route }: NavigationProps) {
 							const response = await api.get(`/search/?
 								origin=${campos.origem}
 								&destination=${campos.destino}
-								&departure1=${formataData(campos.saida)}
+								&departure1=${Utils.formataData(campos.saida)}
 								&passengers=${campos.numPassageiros}
 							`)
 							setListaVoo(response.data)
@@ -298,12 +355,4 @@ export default function BuscarVoos({ navigation, route }: NavigationProps) {
 			</Modal>
 		);
 	}
-}
-
-function pad(value: number) {
-	return value > 9 ? value : "0" + value;
-}
-function formataData(data : string) : string{
-	const[dia,mes,ano] = data.split('/')
-	return `${ano}/${mes}/${dia}`
 }

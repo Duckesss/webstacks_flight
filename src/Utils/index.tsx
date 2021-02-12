@@ -7,4 +7,25 @@ function moneyBR(numero : number) : string{
 		.replace(/\.(?!.*\.)/,',')
 	return `R$ ${num}`
 }
-export {moneyBR}
+
+
+function pad(value: number) {
+	return value > 9 ? value : "0" + value;
+}
+function formataData(data : string) : string{
+	const[dia,mes,ano] = data.split('/')
+	return `${ano}/${mes}/${dia}`
+}
+
+class Utils{
+	moneyBR;
+	pad;
+	formataData;
+	constructor(){
+		this.moneyBR = moneyBR
+		this.pad = pad
+		this.formataData = formataData
+	}
+}
+export default new Utils()
+export {moneyBR,pad,formataData}
