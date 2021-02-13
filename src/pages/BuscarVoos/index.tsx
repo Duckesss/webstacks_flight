@@ -22,7 +22,7 @@ import styles, { Input, SearchButton, inputPadding } from "./styles";
 import { Text, View, TouchableOpacity } from "react-native";
 import api from "../../services";
 
-export default function BuscarVoos({ navigation, route }: NavigationProps) {
+export default function BuscarVoos({ navigation }: NavigationProps) {
 	const [listaVoo, setListaVoo] = useState<ListaVoo[]>([]);
 	const [selectedVoo, setSelectedVoo] = useState<ListaVoo>({} as ListaVoo);
 	const [dataSaida, setDataSaida] = useState<Date>(new Date());
@@ -35,16 +35,16 @@ export default function BuscarVoos({ navigation, route }: NavigationProps) {
 		volta: "",
 	});
 	const [viewController, setViewController] = useState<ViewController>({
-		modal: route.params.modal,
+		modal: false,
 		calendarioSaida: false,
-		loading: false,
+		loading: true,
 		modalConfirmar: false,
 		calendarioVolta: false,
 	});
 	const [listaAeroportos, setListaAeroportos] = useState<Aeroporto[]>([]);
 	const [buscaAeroportos, setBuscaAeroportos] = useState<boolean>(true);
 	useEffect(() => {
-		if(viewController.modal && buscaAeroportos === true){	
+		if(viewController.modal && buscaAeroportos === true){
 			setViewController({ ...viewController, loading: true });
 				Utils.getAeroportos().then(aeroportos => {
 					setListaAeroportos(aeroportos);
@@ -54,6 +54,15 @@ export default function BuscarVoos({ navigation, route }: NavigationProps) {
 		}
 		return () => {setBuscaAeroportos(true);}
 	},[viewController.modal])
+	useEffect(() => {
+		api.get("/voo/?&page=1").then(response => {
+			setListaVoo(response.data)
+			setViewController({
+				...viewController,
+				loading:false
+			})
+		})
+	})
 	return (
 		<Container pointerEvents={viewController.loading ? "none" : "auto"}>
 			<Title>Buscar Voos</Title>
@@ -70,7 +79,7 @@ export default function BuscarVoos({ navigation, route }: NavigationProps) {
 			{
 				listaVoo.length ? (
 					<VooList
-						gridNumber={3}
+						gridNumber={2}
 						acao={true}
 						listaVoo={listaVoo}
 						onPress={function(voo : ListaVoo){

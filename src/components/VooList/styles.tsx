@@ -23,7 +23,7 @@ export default StyleSheet.create({
 	content:{
 		justifyContent: "flex-end",
 		alignItems:"flex-end",
-		flex:1
+		flex:1,
 	}
 })
 

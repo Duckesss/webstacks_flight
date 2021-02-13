@@ -5,18 +5,7 @@ import Toast from "react-native-toast-message";
 import api from "../../services";
 import styles, { Input, Logo, SubmitButton, SubmitText } from "./styles";
 import { NavigationProps } from "./../../routes/types";
-
-export interface InputInterface {
-	[index: string]: string | boolean | undefined;
-	value: string;
-	required?: boolean;
-}
-
-export interface FormValues {
-	[index: string]: InputInterface;
-	username: InputInterface;
-	password: InputInterface;
-}
+import { FormValues } from "./interfaces"
 
 export default function Login({ navigation }: NavigationProps) {
 	const [campos, setCampos] = useState<FormValues>({

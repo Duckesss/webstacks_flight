@@ -42,9 +42,9 @@ export default function MeusVoos({ navigation }: NavigationProps) {
 						/>
 					) : (
 						<Container>
-							<DefaultText>Você ainda não comprou vôos.</DefaultText>
+							<DefaultText>Você ainda não comprou voos.</DefaultText>
 							<TouchableOpacity
-								onPress={() => navigation.navigate("BuscarVoos", {modal:true})}
+								onPress={() => navigation.navigate("BuscarVoos")}
 							>
 								<LinkText>Clique aqui ou no carrinho para comprar um!</LinkText>
 							</TouchableOpacity>
@@ -56,7 +56,7 @@ export default function MeusVoos({ navigation }: NavigationProps) {
 			<FloatingButton
 				onPress={async () => {
 					setLoading(true)
-					navigation.navigate("BuscarVoos", {modal: true})
+					navigation.navigate("BuscarVoos")
 				}}
 			>
 				<MaterialIcons size={30} color={"#004071"} name="shopping-cart" />
