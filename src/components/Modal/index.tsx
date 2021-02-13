@@ -1,5 +1,5 @@
 import React from "react";
-import { Modal, ModalProps, View, StyleSheet, StyleProp, ViewStyle } from "react-native";
+import { Modal, ModalProps, View, StyleProp, ViewStyle } from "react-native";
 import styles from "./styles";
 
 interface myModalProps {

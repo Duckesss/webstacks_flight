@@ -8,7 +8,7 @@ import { DefaultText, LinkText } from "./styles";
 import {Title, FloatingButton, Container, VooList } from "../../components";
 import { ListaVoo } from "../../interfaces";
 import { AxiosResponse } from "axios";
-import { MaterialIcons } from "@expo/vector-icons";
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
 export default function MeusVoos({ navigation }: NavigationProps) {
 	const [listaVoo, setListaVoo] = useState<ListaVoo[]>([]);
@@ -59,7 +59,7 @@ export default function MeusVoos({ navigation }: NavigationProps) {
 					navigation.navigate("BuscarVoos")
 				}}
 			>
-				<MaterialIcons size={30} color={"#004071"} name="shopping-cart" />
+				{(<Icon size={30} color={"#004071"} name={"shopping-cart"}/>)}
 			</FloatingButton>
 		</Container>
 	);

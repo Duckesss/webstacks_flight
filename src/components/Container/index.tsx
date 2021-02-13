@@ -1,11 +1,7 @@
-import styled from "styled-components/native";
 import React from "react";
 import {
 	View,
-	KeyboardAvoidingView,
-	Platform,
 	ViewProps,
-	KeyboardAvoidingViewProps,
 } from "react-native";
 import styles from "./styles";
 

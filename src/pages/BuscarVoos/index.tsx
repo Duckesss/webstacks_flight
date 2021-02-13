@@ -17,7 +17,7 @@ import { NavigationProps } from "./../../routes/types";
 import Utils from "../../Utils";
 import { Picker } from "@react-native-picker/picker";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import { MaterialIcons } from "@expo/vector-icons";
+import Icon from 'react-native-vector-icons/MaterialIcons';
 import styles, { Input, SearchButton, inputPadding } from "./styles";
 import { Text, View, TouchableOpacity } from "react-native";
 import api from "../../services";
@@ -62,7 +62,7 @@ export default function BuscarVoos({ navigation }: NavigationProps) {
 				loading:false
 			})
 		})
-	})
+	},[])
 	return (
 		<Container pointerEvents={viewController.loading ? "none" : "auto"}>
 			<Title>Buscar Voos</Title>
@@ -72,14 +72,14 @@ export default function BuscarVoos({ navigation }: NavigationProps) {
 					setViewController({ ...viewController, modal: true });
 				}}
 			>
-				<MaterialIcons size={30} color={"#004071"} name="search" />
+				{(<Icon size={30} color={"#004071"} name="search" />)}
 			</FloatingButton>
 			{modalConfirmarCompra()}
 			{modalPesquisarVoos()}
 			{
 				listaVoo.length ? (
 					<VooList
-						gridNumber={2}
+						gridNumber={1}
 						acao={true}
 						listaVoo={listaVoo}
 						onPress={function(voo : ListaVoo){

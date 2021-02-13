@@ -7,7 +7,7 @@ import {
 	TextInputProps,
 	TouchableOpacityProps,
 } from "react-native";
-import { MaterialIcons } from "@expo/vector-icons";
+import Icon from 'react-native-vector-icons/MaterialIcons';
 import { TouchableOpacity } from "react-native";
 export const inputPadding = 10;
 const inputWidth = 300;
@@ -65,7 +65,7 @@ export function SearchButton(props: TouchableOpacityProps) {
 		<TouchableOpacity {...props}>
 			<View style={styles.searchContainer}>
 				<Text style={styles.searchText}>Pesquisar</Text>
-				<MaterialIcons size={40} color={"#004071"} name="send" />
+				<Icon size={40} color={"#004071"} name="send" />
 			</View>
 		</TouchableOpacity>
 	);

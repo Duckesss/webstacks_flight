@@ -8,22 +8,36 @@ export default StyleSheet.create({
 	container: {
 		marginTop: 50
 	},
+	content:{
+		flex:1,
+	},
 	background:{
-		borderWidth: 1,
-		borderColor: "#b8b8b8",
-		width: itemWidth,
-		height: itemWidth,
+		// borderColor: "#b8b8b8",
+		borderColor: "#5f5f5f",
+		borderBottomWidth:1,
+		marginBottom:20,
 		padding: 15,
 		flex: 1,
 	},
-	title:{
-		justifyContent:"center",
-		alignItems:"center",
+	titleText:{
+		color: "white",
+		flexDirection:"row",
+		fontSize: 17,
+		justifyContent:"flex-start",
+		alignItems:"flex-start",
+		marginRight:"auto"
 	},
-	content:{
-		justifyContent: "flex-end",
-		alignItems:"flex-end",
-		flex:1,
+	title:{
+		flexDirection:"row",
+	},
+	body:{
+		marginTop:20,
+	},
+	botaoComprar:{
+		marginLeft:"auto"
+	},
+	lastItem:{
+		flexDirection:"row",
 	}
 })
 
