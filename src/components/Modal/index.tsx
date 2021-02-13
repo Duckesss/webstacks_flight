@@ -8,7 +8,7 @@ interface myModalProps {
 }
 type Props = React.PropsWithChildren<ModalProps> & myModalProps;
 
-export default function FloatingButton(props: Props) {
+export function Modal_(props: Props) {
 	return (
 		<Modal {...props} transparent={true} style={props.style}>
 			<View style={[styles[props.position],styles.background]}>

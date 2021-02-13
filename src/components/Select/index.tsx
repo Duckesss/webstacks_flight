@@ -9,7 +9,7 @@ interface SelectProps {
 }
 type Props = React.PropsWithChildren<PickerProps> & SelectProps;
 
-export default function Select(props: Props) {
+export function Select(props: Props) {
 	return (
 		<View>
 			{props.labelText && (

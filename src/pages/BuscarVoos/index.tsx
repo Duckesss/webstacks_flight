@@ -10,7 +10,9 @@ import {
 	VooList
 } from "../../components";
 import Toast from "react-native-toast-message";
-import { ListaVoo } from "../../interfaces/ListaVoo";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { ViewController, Campos } from "./interfaces";
+import { ListaVoo, Aeroporto } from "../../interfaces";
 import { NavigationProps } from "./../../routes/types";
 import Utils from "../../Utils";
 import { Picker } from "@react-native-picker/picker";
@@ -19,35 +21,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 import styles, { Input, SearchButton, inputPadding } from "./styles";
 import { Text, View, TouchableOpacity } from "react-native";
 import api from "../../services";
-interface Aeroporto {
-	code: string;
-	name: string;
-	city: string;
-	country: string;
-	timezone: string;
-}
-interface Campos {
-	origem: string;
-	destino: string;
-	saida: string;
-	numPassageiros: string;
-	volta?: string;
-}
-async function getAeroportos() {
-	try {
-		const response = await api.get("/locations");
-		return response.data;
-	} catch (err) {
-		return [];
-	}
-}
-interface ViewController {
-	modal: boolean;
-	calendarioSaida: boolean;
-	modalConfirmar: boolean;
-	loading: boolean;
-	calendarioVolta: boolean;
-}
+
 export default function BuscarVoos({ navigation, route }: NavigationProps) {
 	const [listaVoo, setListaVoo] = useState<ListaVoo[]>([]);
 	const [selectedVoo, setSelectedVoo] = useState<ListaVoo>({} as ListaVoo);
@@ -72,7 +46,7 @@ export default function BuscarVoos({ navigation, route }: NavigationProps) {
 	useEffect(() => {
 		if(viewController.modal && buscaAeroportos === true){	
 			setViewController({ ...viewController, loading: true });
-				getAeroportos().then(aeroportos => {
+				Utils.getAeroportos().then(aeroportos => {
 					setListaAeroportos(aeroportos);
 					setBuscaAeroportos(false);
 					setViewController({ ...viewController, loading: false });
@@ -85,7 +59,7 @@ export default function BuscarVoos({ navigation, route }: NavigationProps) {
 			<Title>Buscar Voos</Title>
 			{viewController.loading && <Loading />}
 			<FloatingButton
-				onPress={async () => {
+				onPress={() => {
 					setViewController({ ...viewController, modal: true });
 				}}
 			>
@@ -133,9 +107,39 @@ export default function BuscarVoos({ navigation, route }: NavigationProps) {
 				<View style={styles.row}>
 					<TouchableOpacity 
 						style={[styles.button,styles.confirmar]}
-						onPress={() => {
-							console.log('confirmar')
-							console.log(selectedVoo)
+						onPress={async () => {
+							setViewController({
+								...viewController,
+								modalConfirmar: false,
+								loading: true
+							})
+							const token = await AsyncStorage.getItem("@token")
+							const response = await api.post("/checkout",{
+								purchase:{					
+									"flight1": selectedVoo._id,
+									"passengers": selectedVoo.passengers,
+									"cost": selectedVoo.faresMoney
+								}
+							},{
+								headers:{
+									authorization: token
+								}
+							})
+							await AsyncStorage.setItem("@token",response.data?.token)
+							console.log(campos.numPassageiros)
+							const responseListaVoo = await api.get(`/search/?
+								origin=${campos.origem}
+								&destination=${campos.destino}
+								&departure1=${Utils.formataData(campos.saida)}
+								&passengers=${campos.numPassageiros}
+							`)
+							setListaVoo(responseListaVoo.data)
+
+							setViewController({
+								...viewController,
+								modalConfirmar: false,
+								loading: false
+							})
 						}}
 					>
 						<Text style={styles.buttonText}>
@@ -152,8 +156,6 @@ export default function BuscarVoos({ navigation, route }: NavigationProps) {
 							Cancelar
 						</Text>
 					</TouchableOpacity>
-
-
 				</View>
 			</Modal>
 		);

@@ -8,7 +8,7 @@ interface InputFake {
 	value?: string;
 }
 type FakeInputProps = TouchableOpacityProps & InputFake;
-export default function FakeInput(props: FakeInputProps) {
+export function FakeInput(props: FakeInputProps) {
 	return (
 		<TouchableOpacity {...props} activeOpacity={1.0} style={[props.style]}>
 			{!props.value ? (

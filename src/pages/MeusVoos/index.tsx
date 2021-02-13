@@ -6,7 +6,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { NavigationProps } from "./../../routes/types";
 import { DefaultText, LinkText } from "./styles";
 import {Title, FloatingButton, Container, VooList } from "../../components";
-import { ListaVoo } from "../../interfaces/ListaVoo";
+import { ListaVoo } from "../../interfaces";
 import { AxiosResponse } from "axios";
 import { MaterialIcons } from "@expo/vector-icons";
 

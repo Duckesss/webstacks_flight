@@ -1,8 +1,8 @@
-export { default as Container } from "./Container";
-export { default as FloatingButton } from "./FloatingButton";
-export { default as Loading } from "./Loading";
-export { default as Modal } from "./Modal";
-export { default as Title } from "./Title";
-export { default as Select } from "./Select";
-export { default as FakeInput } from "./FakeInput";
-export { default as VooList } from "./VooList";
+export { Container } from "./Container";
+export { FloatingButton } from "./FloatingButton";
+export { Loading } from "./Loading";
+export { Modal_ as Modal } from "./Modal";
+export { Title } from "./Title";
+export { Select } from "./Select";
+export { FakeInput } from "./FakeInput";
+export { VooList } from "./VooList";

@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import styles from "./styles";
 
-export default function Container(props: React.PropsWithChildren<ViewProps>) {
+export function Container(props: React.PropsWithChildren<ViewProps>) {
 	return (
 		<View style={styles.background}>
 			<View style={[styles.container, props.style]}>
