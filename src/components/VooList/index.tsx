@@ -3,18 +3,25 @@ import { Text, TouchableOpacityProps, View, ViewProps, TouchableOpacity, FlatLis
 import { ListaVoo } from "../../interfaces";
 import styles from "./styles";
 import Utils from "../../Utils"
-import {Collapse,CollapseHeader, CollapseBody} from 'accordion-collapse-react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons'; 
-interface ListaVooProps{
+import { Collapse as Collapse_ } from "../Collapse";
+type CollapseIcon = "expand-less" | "expand-more"
+interface Props{
     listaVoo:ListaVoo[];
     gridNumber: number;
-    acao:boolean
+    repetidos?:{
+		[key:string]:number;
+    }
+    acao: boolean;
     onPress?: (voo : ListaVoo) => void
 }
+interface Selected{
+    [key: string]: boolean;
+}
 
-export function VooList(props : ListaVooProps){
-    type CollapseIcon = "expand-less" | "expand-more"
-	const [collapseIcon, setCollapseIcon] = useState<CollapseIcon>("expand-more");
+export function VooList(props : Props){
+    const collapseIcon = ["expand-less","expand-more"]
+	const [selected, setSelected] = useState<Selected>({} as Selected);
     return <FlatList
         style={styles.container}
         keyExtractor={(_, index) => String(index)}
@@ -22,55 +29,63 @@ export function VooList(props : ListaVooProps){
         numColumns={props.gridNumber}
         key={props.gridNumber}
         renderItem={voo => (
-            <Collapse style={styles.background} onToggle={(collapsed : boolean) => {
-                if(collapsed){
-                    setCollapseIcon("expand-less")
-                }else{
-                    setCollapseIcon("expand-more")
-                }
-            }}>
-                <CollapseHeader>
-                     <View style={styles.title}>
-                         <View style={styles.titleContainer}>
+            <Collapse_
+                style={styles.background}
+                header={(
+                    <View style={styles.title}>
+                        <View style={styles.titleContainer}>
                             <Text style={styles.titleText}>
                                 {voo.item.origin.city} {'até'} {voo.item.destination.city}
+                                {props.repetidos? ` (${props.repetidos[voo.item._id]})` : false}
                             </Text>
                             <Text style={styles.titleText}>
                                 {Utils.formatISO(voo.item.departure1, "dd/MM/yyyy")}
                             </Text>
-                         </View>
-                         <Text>
-                            {(<Icon size={25} color={"white"} name={collapseIcon}/>)}
-                         </Text>
-                     </View>
-                </CollapseHeader>
-                <CollapseBody style={styles.body}>
-                     <View style={styles.content}>
-                         <Text style={{color: "white", fontSize: 16}}>
-                             Preço: {Utils.moneyBR(voo.item.faresMoney)}
-                         </Text>
-                         <Text style={{color: "white", fontSize: 16}}>
-                             Confirmados: {voo.item.passengers}
-                         </Text>
-                         <View style={styles.lastItem}>
+                        </View>
+                        <Text>
+                            {(<Icon size={25} color={"white"} name={selected[voo.item._id]? collapseIcon[0] : collapseIcon[1] }/>)}
+                        </Text>
+                    </View>
+                )}
+                body={(
+                    <View style={styles.body}>
+                        <View style={styles.content}>
                             <Text style={{color: "white", fontSize: 16}}>
-                                Espaços livres: {voo.item.totalPassengers - voo.item.passengers}
+                                Preço: {Utils.moneyBR(voo.item.faresMoney)}
                             </Text>
-                            <Text style={styles.botaoComprar}> 
-                                {
-                                    props.acao && 
-                                    <BotaoComprar onPress={() => props.onPress && props.onPress(voo.item)} />
-                                }
+                            <Text style={{color: "white", fontSize: 16}}>
+                                Confirmados: {voo.item.passengers}
                             </Text>
-                         </View>
-                     </View>
-                </CollapseBody>
-            </Collapse>
+                            <View style={styles.lastItem}>
+                                <Text style={{color: "white", fontSize: 16}}>
+                                    Espaços livres: {voo.item.totalPassengers - voo.item.passengers}
+                                </Text>
+                                <Text style={styles.botaoComprar}> 
+                                    {
+                                        props.acao && 
+                                        <BotaoComprar onPress={() => props.onPress && props.onPress(voo.item)} />
+                                    }
+                                </Text>
+                            </View>
+                        </View>
+                    </View>
+                )}
+                onToggle={(collapsed : boolean) => {
+                    if(collapsed){
+                        let obj = {...selected}
+                        obj[voo.item._id] = true
+                        setSelected(obj)
+                    }else{
+                        let obj = {...selected}
+                        obj[voo.item._id] = false
+                        setSelected(obj)
+                    }
+                }}
+            />
             )
         }
     />
 }
-
 interface VooContainerInterface{
     onPress: () => void
 }
@@ -78,7 +93,7 @@ type PropsVooContainer = React.PropsWithChildren<ViewProps|TouchableOpacityProps
 
 function BotaoComprar(props : PropsVooContainer){
     return (
-        <TouchableOpacity activeOpacity={0.6} onPress={() => props.onPress()}>
+        <TouchableOpacity activeOpacity={0.1} onPress={() => props.onPress()}>
             {(<Icon size={45} color={"#7cc79b"} name={"shopping-cart"}/>)}
         </TouchableOpacity>
     )

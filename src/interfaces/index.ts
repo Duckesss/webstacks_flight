@@ -1,3 +1,4 @@
+type CollapseIcon = "expand-less" | "expand-more"
 export interface ListaVoo {
     _id: string;
     departure1: string;
@@ -6,6 +7,7 @@ export interface ListaVoo {
     totalPassengers: number;
     destination:Aeroporto;
     origin:Aeroporto;
+    collapseIcon?:CollapseIcon
 }
 
 export interface Aeroporto {
