@@ -126,7 +126,7 @@ export default function BuscarVoos({ navigation }: NavigationProps) {
 							const response = await api.post("/checkout",{
 								purchase:{					
 									"flight1": selectedVoo._id,
-									"passengers": selectedVoo.passengers,
+									"passengers": 1,
 									"cost": selectedVoo.faresMoney
 								}
 							},{
@@ -135,15 +135,11 @@ export default function BuscarVoos({ navigation }: NavigationProps) {
 								}
 							})
 							await AsyncStorage.setItem("@token",response.data?.token)
-							console.log(campos.numPassageiros)
-							const responseListaVoo = await api.get(`/search/?
-								origin=${campos.origem}
-								&destination=${campos.destino}
-								&departure1=${Utils.formataData(campos.saida)}
-								&passengers=${campos.numPassageiros}
-							`)
-							setListaVoo(responseListaVoo.data)
+							let vooAtualizado = listaVoo.find(voo => voo._id === selectedVoo._id)
+							if(vooAtualizado)
+								++vooAtualizado.passengers;
 
+							setListaVoo(listaVoo)
 							setViewController({
 								...viewController,
 								modalConfirmar: false,
@@ -158,6 +154,7 @@ export default function BuscarVoos({ navigation }: NavigationProps) {
 					<TouchableOpacity 
 						style={[styles.button,styles.cancelar]}
 						onPress={() => {
+							console.log('cancelar')
 							setViewController({...viewController,modalConfirmar:false})
 						}}
 					>

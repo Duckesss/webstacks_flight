@@ -19,13 +19,17 @@ export default StyleSheet.create({
 		padding: 15,
 		flex: 1,
 	},
-	titleText:{
-		color: "white",
+	titleContainer:{
 		flexDirection:"row",
-		fontSize: 17,
+		flexWrap:"wrap",
 		justifyContent:"flex-start",
 		alignItems:"flex-start",
-		marginRight:"auto"
+		marginRight:"auto",
+	},
+	titleText:{
+		color: "white",
+		fontSize: 17,
+		width:"100%"
 	},
 	title:{
 		flexDirection:"row",

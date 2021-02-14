@@ -31,9 +31,14 @@ export function VooList(props : ListaVooProps){
             }}>
                 <CollapseHeader>
                      <View style={styles.title}>
-                         <Text style={styles.titleText}>
-                             {voo.item.destination.city} - {Utils.formatISO(voo.item.departure1, "dd/MM/yyyy")}
-                         </Text>
+                         <View style={styles.titleContainer}>
+                            <Text style={styles.titleText}>
+                                {voo.item.origin.city} {'até'} {voo.item.destination.city}
+                            </Text>
+                            <Text style={styles.titleText}>
+                                {Utils.formatISO(voo.item.departure1, "dd/MM/yyyy")}
+                            </Text>
+                         </View>
                          <Text>
                             {(<Icon size={25} color={"white"} name={collapseIcon}/>)}
                          </Text>

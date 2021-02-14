@@ -4,13 +4,12 @@ export interface ListaVoo {
     passengers: number;
     faresMoney: number;
     totalPassengers: number;
-    destination: {
-        city: string;
-        _id: string;
-    }
+    destination:Aeroporto;
+    origin:Aeroporto;
 }
 
 export interface Aeroporto {
+    _id: string;
 	code: string;
 	name: string;
 	city: string;
