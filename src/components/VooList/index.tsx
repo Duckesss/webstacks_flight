@@ -4,8 +4,8 @@ import { ListaVoo } from "../../interfaces";
 import styles from "./styles";
 import Utils from "../../Utils"
 import Icon from 'react-native-vector-icons/MaterialIcons'; 
-import { Collapse as Collapse_ } from "../Collapse";
-type CollapseIcon = "expand-less" | "expand-more"
+import { Collapse } from "../Collapse";
+
 interface Props{
     listaVoo:ListaVoo[];
     gridNumber: number;
@@ -29,7 +29,7 @@ export function VooList(props : Props){
         numColumns={props.gridNumber}
         key={props.gridNumber}
         renderItem={voo => (
-            <Collapse_
+            <Collapse
                 style={styles.background}
                 header={(
                     <View style={styles.title}>

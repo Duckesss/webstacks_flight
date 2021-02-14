@@ -13,7 +13,7 @@ import Toast from "react-native-toast-message";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ViewController, Campos } from "./interfaces";
 import { ListaVoo, Aeroporto } from "../../interfaces";
-import { NavigationProps } from "./../../routes/types";
+import { NavigationProps as Props } from "./../../routes/types";
 import Utils from "../../Utils";
 import { Picker } from "@react-native-picker/picker";
 import DateTimePicker from "@react-native-community/datetimepicker";
@@ -22,7 +22,7 @@ import styles, { Input, SearchButton, inputPadding } from "./styles";
 import { Text, View, TouchableOpacity } from "react-native";
 import api from "../../services";
 
-export default function BuscarVoos({ navigation }: NavigationProps) {
+export default function BuscarVoos({ navigation }: Props) {
 	const [listaVoo, setListaVoo] = useState<ListaVoo[]>([]);
 	const [selectedVoo, setSelectedVoo] = useState<ListaVoo>({} as ListaVoo);
 	const [dataSaida, setDataSaida] = useState<Date>(new Date());

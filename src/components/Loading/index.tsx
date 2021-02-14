@@ -1,8 +1,8 @@
 import React from "react";
-import { LoadingContainer } from "./styles";
-import { ActivityIndicator } from "react-native";
+import { ActivityIndicator, View } from "react-native";
+import styles from "./styles"
 export const Loading = () => (
-	<LoadingContainer>
+	<View style={styles.container}>
 		<ActivityIndicator color="white" size="large" />
-	</LoadingContainer>
+	</View>
 );

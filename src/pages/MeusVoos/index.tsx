@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { TouchableOpacity } from "react-native";
+import { Text, TouchableOpacity } from "react-native";
 import api from "../../services";
-import { gridNumber } from "./styles";
+import styles from "./styles";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { NavigationProps } from "./../../routes/types";
-import { DefaultText, LinkText } from "./styles";
 import {Title, FloatingButton, Container, VooList, Loading } from "../../components";
 import { ListaVoo } from "../../interfaces";
 import { AxiosResponse } from "axios";
@@ -66,11 +65,15 @@ export default function MeusVoos({ navigation }: NavigationProps) {
 				) : (
 					!loading && 
 					<Container>
-						<DefaultText>Você ainda não comprou voos.</DefaultText>
+						<Text style={styles.defaultText}>
+							Você ainda não comprou voos.
+						</Text>
 						<TouchableOpacity
 							onPress={() => navigation.navigate("BuscarVoos")}
 						>
-							<LinkText>Clique aqui ou no carrinho para comprar um!</LinkText>
+							<Text style={styles.linkText}>
+								Clique aqui ou no carrinho para comprar um!
+							</Text>
 						</TouchableOpacity>
 					</Container>
 				)

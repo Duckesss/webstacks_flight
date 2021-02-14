@@ -1,5 +1,4 @@
 import React from "react";
-import styled from "styled-components/native";
 import { View, TextInput, TextInputProps, StyleSheet } from "react-native";
 const contentWidth = 80;
 const borderRadius = 7;
@@ -22,6 +21,25 @@ const styles = StyleSheet.create({
 		alignItems: "center",
 		flex: 1,
 	},
+	submitButton:{
+		alignItems:"center",
+		justifyContent:"center",
+		backgroundColor:"#004071",
+		width: `${contentWidth - 30}%`,
+		height:45,
+		borderRadius:borderRadius,
+		marginTop:0
+	},
+	submitText:{
+		fontSize:20,
+		color:"#fff"
+	},
+	logo:{
+		width: 300,
+		height:160,
+		top:-70,
+		marginBottom:-10
+	}
 });
 export default styles;
 export function Input(props: TextInputProps) {
@@ -36,36 +54,3 @@ export function Input(props: TextInputProps) {
 		</View>
 	);
 }
-
-export const LoginContainer = styled.KeyboardAvoidingView`
-	flex: 1;
-	align-items: center;
-	justify-content: center;
-`;
-
-export const ErrorText = styled.Text`
-	color: red;
-	margin: -10px 0px 20px 0px;
-	font-size: 16px;
-`;
-export const SubmitButton = styled.TouchableOpacity`
-	align-items: center;
-	justify-content: center;
-	background-color: #004071;
-	width: ${contentWidth - 30}%;
-	height: 45px;
-	border-radius: ${borderRadius}px;
-	margin-top: 10px;
-`;
-
-export const SubmitText = styled.Text`
-	font-size: 20px;
-	color: #fff;
-`;
-
-export const Logo = styled.Image`
-	width: 300px;
-	height: 160px;
-	top: -70px;
-	margin-bottom: -10px;
-`;

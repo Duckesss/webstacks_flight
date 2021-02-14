@@ -1,11 +1,19 @@
-import React, { useState } from "react";
+import React, { PropsWithChildren, useState } from "react";
 import { Loading, Container } from "../../components";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import Toast from "react-native-toast-message";
 import api from "../../services";
-import styles, { Input, Logo, SubmitButton, SubmitText } from "./styles";
+import styles, { Input } from "./styles";
 import { NavigationProps } from "./../../routes/types";
 import { FormValues } from "./interfaces"
+import { TouchableOpacity, TouchableOpacityProps, Text, Image } from "react-native";
+
+function SubmitButton(props : PropsWithChildren<TouchableOpacityProps>){
+	return (
+		<TouchableOpacity {...props} style={styles.submitButton}>
+			{props.children}
+		</TouchableOpacity>
+	)
+}
 
 export default function Login({ navigation }: NavigationProps) {
 	const [campos, setCampos] = useState<FormValues>({
@@ -25,7 +33,7 @@ export default function Login({ navigation }: NavigationProps) {
 			style={styles.center}
 		>
 			{loading && <Loading />}
-			<Logo
+			<Image style={styles.logo}
 				resizeMode="stretch"
 				source={require("../../../assets/logo.png")}
 			/>
@@ -61,7 +69,9 @@ export default function Login({ navigation }: NavigationProps) {
 				}}
 			/>
 			<SubmitButton onPress={() => submit(campos)}>
-				<SubmitText>Login</SubmitText>
+				<Text style={styles.submitText}>
+					Login
+				</Text>
 			</SubmitButton>
 		</Container>
 	);
@@ -82,11 +92,6 @@ export default function Login({ navigation }: NavigationProps) {
 		} catch (err) {
 			setLoading(false);
 			console.log(err.message || err || err.response?.data);
-			Toast.show({
-				type: "error",
-				text1: String(err.message || err || err.response?.data),
-				topOffset: 50,
-			});
 		}
 	}
 }
