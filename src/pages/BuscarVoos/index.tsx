@@ -9,7 +9,6 @@ import {
 	FakeInput,
 	VooList
 } from "../../components";
-import Toast from "react-native-toast-message";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ViewController, Campos } from "./interfaces";
 import { ListaVoo, Aeroporto } from "../../interfaces";
@@ -342,11 +341,7 @@ export default function BuscarVoos({ navigation }: Props) {
 								return campo[1] === ""
 						})
 						if(camposVazios){
-							Toast.show({
-								type: "error",
-								text1: "Preencha os campos corretamente!",
-								topOffset: 50,
-							});
+							console.log("CAMPO VAZIO")
 						}else{
 							setViewController({...viewController,loading: true, modal: false})
 							const response = await api.get(`/search/?
