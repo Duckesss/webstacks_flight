@@ -1,10 +1,13 @@
 import { RouteProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 
+type Pages = "Login" | "MeusVoos" | "BuscarVoos"
+
 type RootStackParamList = {
 	Login: undefined;
 	MeusVoos: undefined;
 	BuscarVoos: undefined;
+	Sidebar: undefined;
 };
 
 type LoginProps = StackNavigationProp<RootStackParamList, "Login">;
@@ -13,4 +16,4 @@ type BuscarVoosProps = StackNavigationProp<RootStackParamList, "BuscarVoos">;
 type NavigationProps = {
 	navigation: LoginProps | MeusVoosProps | BuscarVoosProps;
 };
-export type { NavigationProps, RootStackParamList };
+export type { NavigationProps, RootStackParamList, Pages};

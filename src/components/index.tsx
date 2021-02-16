@@ -7,3 +7,4 @@ export { Select } from "./Select";
 export { FakeInput } from "./FakeInput";
 export { VooList } from "./VooList";
 export { Collapse } from "./Collapse";
+export { Sidebar } from "./Sidebar";

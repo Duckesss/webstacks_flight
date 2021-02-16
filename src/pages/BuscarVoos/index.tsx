@@ -7,7 +7,8 @@ import {
 	Loading,
 	Select,
 	FakeInput,
-	VooList
+	VooList,
+	Sidebar
 } from "../../components";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ViewController, Campos } from "./interfaces";
@@ -62,8 +63,16 @@ export default function BuscarVoos({ navigation }: Props) {
 			})
 		})
 	},[])
+	navigation.addListener("beforeRemove", e => {
+		if(e.data.action.type === "GO_BACK")
+			e.preventDefault()
+		return true
+	});
 	return (
 		<Container pointerEvents={viewController.loading ? "none" : "auto"}>
+			<Sidebar
+				navigation={navigation}
+			/>
 			<Title>Buscar Voos</Title>
 			{viewController.loading && <Loading />}
 			<FloatingButton

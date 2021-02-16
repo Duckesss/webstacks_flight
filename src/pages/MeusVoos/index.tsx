@@ -4,7 +4,7 @@ import api from "../../services";
 import styles from "./styles";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { NavigationProps } from "./../../routes/types";
-import {Title, FloatingButton, Container, VooList, Loading } from "../../components";
+import {Title, FloatingButton, Container, VooList, Loading, Sidebar } from "../../components";
 import { ListaVoo } from "../../interfaces";
 import { AxiosResponse } from "axios";
 import Icon from 'react-native-vector-icons/MaterialIcons';
@@ -26,7 +26,9 @@ export default function MeusVoos({ navigation }: NavigationProps) {
 	const [getListaVoo, setGetListaVoo] = useState<boolean>(true);
 
 	navigation.addListener("beforeRemove", e => {
-		e.preventDefault();
+		if(e.data.action.type === "GO_BACK")
+			e.preventDefault()
+		return true
 	});
 	useEffect(() => {
 		async function getLista() {
@@ -52,6 +54,9 @@ export default function MeusVoos({ navigation }: NavigationProps) {
 	});
 	return (
 		<Container>
+			<Sidebar
+				navigation={navigation}
+			/>
 			<Title>Meus Voos</Title>
 			{loading && <Loading />}
 			{
