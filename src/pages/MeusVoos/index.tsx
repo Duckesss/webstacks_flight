@@ -6,7 +6,6 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { NavigationProps } from "./../../routes/types";
 import {Title, FloatingButton, Container, VooList, Loading, Sidebar } from "../../components";
 import { ListaVoo } from "../../interfaces";
-import { AxiosResponse } from "axios";
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
 
@@ -32,26 +31,34 @@ export default function MeusVoos({ navigation }: NavigationProps) {
 	});
 	useEffect(() => {
 		async function getLista() {
-			const token = await AsyncStorage.getItem("@token");
-			const response = await callApi(500, token || "");
-			const lista = response.data.myFlights.reduce((retorno : MyFlights,voo : ListaVoo) => {
-				if(retorno.voosRepetidos[voo._id]){
-					retorno.voosRepetidos[voo._id]++
-				}else{
-					retorno.voosRepetidos[voo._id] = 1
-					retorno.voos.push(voo)
-				}
-				return retorno
-			}, {
-				voosRepetidos: {},
-				voos: []
-			})
-			setListaVoo(lista);
-			setLoading(false);
+			try{
+				const token = await AsyncStorage.getItem("@token");
+				if(!token)
+					throw "Token não informado."
+				const response = await api.get("/my-flights", {
+					headers: { Authorization: token },
+				});
+				const lista = response.data.myFlights.reduce((retorno : MyFlights,voo : ListaVoo) => {
+					if(retorno.voosRepetidos[voo._id]){
+						retorno.voosRepetidos[voo._id]++
+					}else{
+						retorno.voosRepetidos[voo._id] = 1
+						retorno.voos.push(voo)
+					}
+					return retorno
+				}, {
+					voosRepetidos: {},
+					voos: []
+				})
+				setListaVoo(lista);
+				setLoading(false);
+			}catch(err){
+				console.log(err)
+				console.log(err?.response?.data)
+			}
 		}
 		getLista();
-		return () => setGetListaVoo(true)
-	});
+	},[getListaVoo]);
 	return (
 		<Container>
 			<Sidebar
@@ -93,19 +100,4 @@ export default function MeusVoos({ navigation }: NavigationProps) {
 			</FloatingButton>
 		</Container>
 	);
-}
-function callApi(timeout: number, token: string): Promise<AxiosResponse> {
-	return new Promise((resolve, reject) => {
-		setTimeout(async () => {
-			try {
-				if (!token) throw "Token nao informado";
-				const response = await api.get("/my-flights", {
-					headers: { Authorization: token },
-				});
-				resolve(response);
-			} catch (err) {
-				reject(err);
-			}
-		}, timeout);
-	});
 }

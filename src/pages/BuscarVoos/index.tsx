@@ -125,34 +125,39 @@ export default function BuscarVoos({ navigation }: Props) {
 					<TouchableOpacity 
 						style={[styles.button,styles.confirmar]}
 						onPress={async () => {
-							setViewController({
-								...viewController,
-								modalConfirmar: false,
-								loading: true
-							})
-							const token = await AsyncStorage.getItem("@token")
-							const response = await api.post("/checkout",{
-								purchase:{					
-									"flight1": selectedVoo._id,
-									"passengers": 1,
-									"cost": selectedVoo.faresMoney
-								}
-							},{
-								headers:{
-									authorization: token
-								}
-							})
-							await AsyncStorage.setItem("@token",response.data?.token)
-							let vooAtualizado = listaVoo.find(voo => voo._id === selectedVoo._id)
-							if(vooAtualizado)
-								++vooAtualizado.passengers;
-
-							setListaVoo(listaVoo)
-							setViewController({
-								...viewController,
-								modalConfirmar: false,
-								loading: false
-							})
+							try{
+								setViewController({
+									...viewController,
+									modalConfirmar: false,
+									loading: true
+								})
+								const token = await AsyncStorage.getItem("@token")
+								const response = await api.post("/checkout",{
+									purchase:{					
+										"flight1": selectedVoo._id,
+										"passengers": 1,
+										"cost": selectedVoo.faresMoney
+									}
+								},{
+									headers:{
+										authorization: token
+									}
+								})
+								await AsyncStorage.setItem("@token",response.data?.token)
+								let vooAtualizado = listaVoo.find(voo => voo._id === selectedVoo._id)
+								if(vooAtualizado)
+									++vooAtualizado.passengers;
+	
+								setListaVoo(listaVoo)
+								setViewController({
+									...viewController,
+									modalConfirmar: false,
+									loading: false
+								})
+							}catch(err){
+								console.log(err)
+								console.log(err?.response?.data)
+							}
 						}}
 					>
 						<Text style={styles.buttonText}>
