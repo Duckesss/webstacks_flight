@@ -92,7 +92,6 @@ export default function MeusVoos({ navigation }: NavigationProps) {
 			}
 			<FloatingButton
 				onPress={() => {
-					setLoading(true)
 					navigation.navigate("BuscarVoos")
 				}}
 			>

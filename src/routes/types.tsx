@@ -1,5 +1,6 @@
 import { RouteProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
+import { DrawerNavigationProp } from "@react-navigation/drawer";
 
 type Pages = "Login" | "MeusVoos" | "BuscarVoos"
 
@@ -10,9 +11,9 @@ type RootStackParamList = {
 	Sidebar: undefined;
 };
 
-type LoginProps = StackNavigationProp<RootStackParamList, "Login">;
-type MeusVoosProps = StackNavigationProp<RootStackParamList, "MeusVoos">;
-type BuscarVoosProps = StackNavigationProp<RootStackParamList, "BuscarVoos">;
+type LoginProps = DrawerNavigationProp<RootStackParamList, "Login">;
+type MeusVoosProps = DrawerNavigationProp<RootStackParamList, "MeusVoos">;
+type BuscarVoosProps = DrawerNavigationProp<RootStackParamList, "BuscarVoos">;
 type NavigationProps = {
 	navigation: LoginProps | MeusVoosProps | BuscarVoosProps;
 };
