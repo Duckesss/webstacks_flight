@@ -18,43 +18,22 @@ const styles = StyleSheet.create({
 		borderRadius: 10,
 		width: inputWidth,
 	},
-	row:{
-		flexDirection:"row",
+	label: {
+		color: "#575757",
+		paddingHorizontal: inputPadding,
+		marginBottom: -inputPadding,
+		width: inputWidth,
 	},
 	searchContainer: {
 		flexDirection: "row",
 		alignItems: "center",
 		marginTop: 20,
 	},
-	confirmar:{
-		backgroundColor: "green",
-		marginRight: 5,
-	},
-	cancelar:{
-		marginLeft: 5,
-		backgroundColor: "red",
-	},
-	button:{
-		borderRadius: 8,
-		padding:20,
-		height:30,
-		justifyContent:"center"
-	},
-	buttonText:{
-		color: "white",
-		fontSize:20
-	},
 	searchText: {
 		color: "#004071",
 		fontWeight: "bold",
 		fontSize: 20,
 		marginRight: 5,
-	},
-	label: {
-		color: "#575757",
-		paddingHorizontal: inputPadding,
-		marginBottom: -inputPadding,
-		width: inputWidth,
 	},
 });
 

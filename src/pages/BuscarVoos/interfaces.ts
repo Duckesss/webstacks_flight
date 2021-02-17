@@ -3,6 +3,7 @@ export interface ViewController {
 	calendarioSaida: boolean;
 	modalConfirmar: boolean;
 	loading: boolean;
+	filter:boolean;
 	calendarioVolta: boolean;
 }
 export interface Campos {
