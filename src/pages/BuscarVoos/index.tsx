@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import {
-	Title,
+	TitleText,
+	TitleContainer,
 	FloatingButton,
 	Container,
 	Loading,
@@ -9,46 +10,104 @@ import {
 } from "../../components";
 import ConfirmarCompra from "./ConfirmarCompra";
 import PesquisarVoos from "./PesquisarVoos";
-import { ViewController } from "./interfaces";
+import { ViewController, State } from "./interfaces";
 import { ListaVoo, Aeroporto } from "../../interfaces";
 import { NavigationProps as Props } from "./../../routes/types";
 import Utils from "../../Utils";
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import api from "../../services";
+import { Text, View } from "react-native";
+import { TouchableWithoutFeedback as Button} from "react-native";
+import { useFocusEffect } from "@react-navigation/native";
 
-export default function BuscarVoos({ navigation }: Props) {
-	const [listaVoo, setListaVoo] = useState<ListaVoo[]>([]);
-	const [selectedVoo, setSelectedVoo] = useState<ListaVoo>({} as ListaVoo);
-	const [viewController, setViewController] = useState<ViewController>({
+
+const initialState : State = {
+	listaVoo: [],
+	selectedVoo: {} as ListaVoo,
+	page: 1,
+	totalPages: 0,
+	viewController:{
 		modal: false,
 		calendarioSaida: false,
 		loading: true,
 		modalConfirmar: false,
-		filter: false,
 		calendarioVolta: false,
-	});
-	const [listaAeroportos, setListaAeroportos] = useState<Aeroporto[]>([]);
-	const [buscaAeroportos, setBuscaAeroportos] = useState<boolean>(true);
-	useEffect(() => {
-		if(viewController.modal && buscaAeroportos === true){
-			setViewController({ ...viewController, loading: true });
-				Utils.getAeroportos().then(aeroportos => {
-					setListaAeroportos(aeroportos);
-					setBuscaAeroportos(false);
-					setViewController({ ...viewController, loading: false });
-				})
-		}
-		return () => {setBuscaAeroportos(true);}
-	},[viewController.modal])
-	useEffect(() => {
-		api.get("/voo/?&page=1").then(response => {
-			setListaVoo(response.data)
-			setViewController({
-				...viewController,
-				loading:false
+	},
+	listaAeroportos: [],
+}
+
+export default function BuscarVoos({ navigation }: Props) {
+	const [{
+		listaVoo,
+		selectedVoo,
+		page,
+		totalPages,
+		viewController,
+		listaAeroportos
+	}, setState] = useState<State>(initialState);
+	useFocusEffect(
+		React.useCallback(() => {
+			const clear = () => {
+				setState({...initialState})
+			}
+			const promises = [
+				api.get(`/voo/?&page=${initialState.page}`),
+				Utils.getAeroportos(),
+				api.get("/voo/count")
+			]
+
+			setState(prev => ({
+				...prev,
+				viewController:{
+					...prev.viewController,
+					loading:true
+				}
+			}))
+			Promise.all(promises).then(values => {
+				console.log("then")
+				const [voos,aeroportos,totalPages] = values
+				setState(prev => ({
+					...prev,
+					listaVoo: voos.data || prev.listaVoo,
+					listaAeroportos: aeroportos || prev.listaAeroportos,
+					totalPages: totalPages.data,
+					viewController: {
+						...prev.viewController,
+						loading:false
+					}
+				}))
+			}).catch(err => {
+				console.log(err)
+				console.log("ERRO NAS PROMISES")
 			})
-		})
-	},[])
+
+		  	return () => clear()
+		}, [])
+	)
+	useEffect(() => {
+		const getVoos = () => {
+			setState(prev => ({
+				...prev,
+				viewController:{
+					...prev.viewController,
+					loading:true
+				}
+			}))
+			const vooData = api.get(`/voo/?&page=${page}`)
+			vooData.then(response => {
+				setState(prev => ({
+					...prev,
+					listaVoo: response.data,
+					viewController:{
+						...prev.viewController,
+						loading:false
+					}
+				}))
+			})
+		}
+		if(page !== initialState.page)
+			getVoos();
+	},[page])
 	navigation.addListener("beforeRemove", e => {
 		if(e.data.action.type === "GO_BACK")
 			e.preventDefault()
@@ -59,41 +118,80 @@ export default function BuscarVoos({ navigation }: Props) {
 			<Sidebar
 				navigation={navigation}
 			/>
-			<Title>Buscar Voos</Title>
+
+			<TitleContainer
+				style={{
+					flexDirection:"row",
+					justifyContent: "space-between",
+					alignItems: "center",
+				}}
+			>
+				<Button
+					onPress={() => setState(prev => ({...prev, page: prev.page - 1}))}
+				>
+					{(<Icon size={30} color={"white"} name="arrow-back-ios" />)}
+				</Button>
+				<TitleText>
+						Buscar Voos
+				</TitleText>
+				<Button
+					onPress={() => setState(prev => ({...prev, page: prev.page + 1}))}
+				>
+					{(<Icon size={30} color={"white"} name="arrow-forward-ios" />)}
+				</Button>
+			</TitleContainer>
+
 			{viewController.loading && <Loading />}
+
 			<FloatingButton
 				onPress={() => {
-					setViewController({ ...viewController, modal: true });
+					setState(prev => ({
+						...prev,
+						viewController: {
+							...prev.viewController,
+							modal: true
+						}
+					}))
 				}}
 			>
 				{(<Icon size={30} color={"#004071"} name="search" />)}
 			</FloatingButton>
+
 			{
 				ConfirmarCompra({
 					viewController,
-					setViewController,
 					selectedVoo,
 					listaVoo,
-					setListaVoo,
+					setState
 				})
 			}
+
 			{PesquisarVoos({
 				listaAeroportos,
-				setListaVoo,
-				setViewController,
-				viewController
+				viewController,
+				setState
 			})}
+
 			{
 				listaVoo.length ? (
-					<VooList
-						gridNumber={1}
-						acao={true}
-						listaVoo={listaVoo}
-						onPress={function(voo : ListaVoo){
-							setSelectedVoo(voo)
-							setViewController({ ...viewController, modalConfirmar: true });
-						}}
-					/>
+					<View>
+						<Text style={{color:"white",padding:15, alignSelf:"flex-end"}}>Página {page} de {totalPages || ''}</Text>
+						<VooList
+							gridNumber={1}
+							acao={true}
+							listaVoo={listaVoo}
+							onPress={function(voo : ListaVoo){
+								setState(prev => ({
+									...prev,
+									viewController: {
+										...prev.viewController,
+										modalConfirmar: true
+									},
+									selectedVoo:voo
+								}))
+							}}
+						/>
+					</View>
 				) : (false)
 			}
 		</Container>

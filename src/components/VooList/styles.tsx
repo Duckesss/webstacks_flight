@@ -1,7 +1,7 @@
 import { StyleSheet } from "react-native";
 export default StyleSheet.create({
 	container: {
-		marginTop: 50
+		marginTop: 10
 	},
 	content:{
 		flex:1,

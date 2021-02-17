@@ -1,32 +1,21 @@
 import React, { useEffect, useState } from "react";
 import {
 	Modal,
-	Title,
-	FloatingButton,
-	Container,
-	Loading,
-	Select,
-	FakeInput,
-	VooList,
-	Sidebar
 } from "../../../components";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ViewController, Campos } from ".././interfaces";
 import { ListaVoo, Aeroporto } from "../../../interfaces";
-import Utils from "../../../Utils";
-import { Picker } from "@react-native-picker/picker";
-import DateTimePicker from "@react-native-community/datetimepicker";
-import Icon from 'react-native-vector-icons/MaterialIcons';
 import styles from "./styles";
 import { Text, View, TouchableOpacity } from "react-native";
 import api from "../../../services";
+import { State } from "../interfaces";
+
 
 interface Props {
 	viewController: ViewController;
-	setViewController: React.Dispatch<React.SetStateAction<ViewController>>;
 	selectedVoo: ListaVoo;
+	setState: React.Dispatch<React.SetStateAction<State>>;
 	listaVoo : ListaVoo[];
-	setListaVoo: React.Dispatch<React.SetStateAction<ListaVoo[]>>;
 }
 
 export default function modalConfirmarCompra(props : Props){
@@ -41,7 +30,13 @@ export default function modalConfirmarCompra(props : Props){
 			}}
 			visible={props.viewController.modalConfirmar}
 			onRequestClose={() =>
-				props.setViewController({ ...props.viewController, modalConfirmar: false })
+				props.setState(prev => ({
+					...prev,
+					viewController:{
+						...prev.viewController,
+						modalConfirmar:false
+					}
+				}))
 			}
 		>
 			<Text style={{
@@ -55,11 +50,14 @@ export default function modalConfirmarCompra(props : Props){
 					style={[styles.button,styles.confirmar]}
 					onPress={async () => {
 						try{
-							props.setViewController({
-								...props.viewController,
-								modalConfirmar: false,
-								loading: true
-							})
+							props.setState(prev => ({
+								...prev,
+								viewController:{
+									...prev.viewController,
+									modalConfirmar:false,
+									loading:true
+								}
+							}))
 							const token = await AsyncStorage.getItem("@token")
 							const response = await api.post("/checkout",{
 								purchase:{					
@@ -77,12 +75,15 @@ export default function modalConfirmarCompra(props : Props){
 							if(vooAtualizado)
 								++vooAtualizado.passengers;
 
-							props.setListaVoo(props.listaVoo)
-							props.setViewController({
-								...props.viewController,
-								modalConfirmar: false,
-								loading: false
-							})
+							props.setState(prev => ({
+								...prev,
+								viewController:{
+									...prev.viewController,
+									modalConfirmar: false,
+									loading: false
+								},
+								listaVoo: props.listaVoo
+							}))
 						}catch(err){
 							console.log(err)
 							console.log(err?.response?.data)
@@ -96,7 +97,13 @@ export default function modalConfirmarCompra(props : Props){
 				<TouchableOpacity 
 					style={[styles.button,styles.cancelar]}
 					onPress={() => {
-						props.setViewController({...props.viewController,modalConfirmar:false})
+						props.setState(prev => ({
+							...prev,
+							viewController:{
+								...prev.viewController,
+								modalConfirmar: false,
+							},
+						}))
 					}}
 				>
 					<Text style={styles.buttonText}>

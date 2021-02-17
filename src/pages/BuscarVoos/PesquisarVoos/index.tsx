@@ -11,12 +11,12 @@ import { Picker } from "@react-native-picker/picker";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import styles, { Input, SearchButton, inputPadding } from "./styles";
 import { Text } from "react-native";
+import { State } from "../interfaces";
 import api from "../../../services";
 
 interface Props {
 	viewController: ViewController;
-	setViewController: React.Dispatch<React.SetStateAction<ViewController>>;
-	setListaVoo: React.Dispatch<React.SetStateAction<ListaVoo[]>>;
+	setState: React.Dispatch<React.SetStateAction<State>>;
 	listaAeroportos: Aeroporto[];
 }
 
@@ -37,7 +37,13 @@ export default function modalPesquisarVoos(props : Props) {
 			transparent={true}
 			visible={props.viewController.modal}
 			onRequestClose={() =>
-				props.setViewController({ ...props.viewController, modal: false })
+				props.setState(prev => ({
+					...prev,
+					viewController:{
+						...prev.viewController,
+						modal:false
+					}
+				}))
 			}
 		>
 			<Select
@@ -96,10 +102,16 @@ export default function modalPesquisarVoos(props : Props) {
 							let novaData = `${Utils.pad(date.getDate())}/${Utils.pad(
 								date.getMonth() + 1
 							)}/${date.getFullYear()}`;
-							props.setViewController({
-								...props.viewController,
-								calendarioSaida: false,
-							});
+
+
+							
+							props.setState(prev => ({
+								...prev,
+								viewController:{
+									...prev.viewController,
+									calendarioSaida: false,
+								}
+							}))
 							setCampos({
 								...campos,
 								saida: novaData,
@@ -121,10 +133,13 @@ export default function modalPesquisarVoos(props : Props) {
 					},
 				]}
 				onPress={() => {
-					props.setViewController({
-						...props.viewController,
-						calendarioSaida: true,
-					});
+					props.setState(prev => ({
+						...prev,
+						viewController:{
+							...prev.viewController,
+							calendarioSaida: true,
+						}
+					}))
 				}}
 			/>
 			<Input
@@ -155,10 +170,13 @@ export default function modalPesquisarVoos(props : Props) {
 							let novaData = `${Utils.pad(date.getDate())}/${Utils.pad(
 								date.getMonth() + 1
 							)}/${date.getFullYear()}`;
-							props.setViewController({
-								...props.viewController,
-								calendarioVolta: false,
-							});
+							props.setState(prev => ({
+								...prev,
+								viewController:{
+									...prev.viewController,
+									calendarioVolta: false,
+								}
+							}))
 							setCampos({
 								...campos,
 								volta: novaData,
@@ -180,10 +198,13 @@ export default function modalPesquisarVoos(props : Props) {
 					},
 				]}
 				onPress={() => {
-					props.setViewController({
-						...props.viewController,
-						calendarioVolta: true,
-					});
+					props.setState(prev => ({
+						...prev,
+						viewController:{
+							...prev.viewController,
+							calendarioVolta: true,
+						}
+					}))
 				}}
 			/>
 			<Text
@@ -206,15 +227,30 @@ export default function modalPesquisarVoos(props : Props) {
 					if(camposVazios){
 						console.log("CAMPO VAZIO")
 					}else{
-						props.setViewController({...props.viewController,loading: true, modal: false})
+						props.setState(prev => ({
+							...prev,
+							viewController:{
+								...prev.viewController,
+								loading: true,
+								modal: false
+							}
+						}))
 						const response = await api.get(`/search/?
 							origin=${campos.origem}
 							&destination=${campos.destino}
 							&departure1=${Utils.formataData(campos.saida)}
 							&passengers=${campos.numPassageiros}
 						`)
-						props.setListaVoo(response.data)
-						props.setViewController({...props.viewController,loading: false, modal: false, filter: true})
+						props.setState(prev => ({
+							...prev,
+							viewController:{
+								...prev.viewController,
+								loading: false,
+								modal: false,
+								filter: true
+							},
+							listaVoo:response.data
+						}))
 					}
 				}} 
 			/>

@@ -10,3 +10,8 @@ export interface FormValues {
 	username: InputInterface;
 	password: InputInterface;
 }
+
+export interface State {
+	campos: FormValues;
+	loading: boolean;
+}

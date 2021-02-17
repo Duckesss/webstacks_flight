@@ -38,7 +38,7 @@ export class Routes extends React.Component {
 									),
 									drawerLabel: (props) => (
 										<Text style={{color:"white"}}>Login</Text>
-									)
+									),
 								}}
 							/>
 							<Drawer.Screen

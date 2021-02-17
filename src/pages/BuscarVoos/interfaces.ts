@@ -1,9 +1,9 @@
+import { ListaVoo, Aeroporto } from "../../interfaces";
 export interface ViewController {
 	modal: boolean;
 	calendarioSaida: boolean;
 	modalConfirmar: boolean;
 	loading: boolean;
-	filter:boolean;
 	calendarioVolta: boolean;
 }
 export interface Campos {
@@ -12,4 +12,13 @@ export interface Campos {
 	saida: string;
 	numPassageiros: string;
 	volta?: string;
+}
+
+export interface State{
+	listaVoo: ListaVoo[];
+	selectedVoo: ListaVoo;
+	page: number;
+	totalPages: number;
+	viewController: ViewController;
+	listaAeroportos: Aeroporto[];
 }
