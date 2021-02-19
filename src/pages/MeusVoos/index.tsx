@@ -7,58 +7,33 @@ import { NavigationProps } from "./../../routes/types";
 import {Title, FloatingButton, Container, VooList, Loading, Sidebar } from "../../components";
 import { ListaVoo } from "../../interfaces";
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import {MyFlights, State} from "./interfaces"
+import { useFocusEffect } from "@react-navigation/native";
 
-
-interface MyFlights{
-	voosRepetidos: {
-		[key:string]:number;
-	};
-	voos: ListaVoo[];
-}
-
-export default function MeusVoos({ navigation }: NavigationProps) {
-	const [listaVoo, setListaVoo] = useState<MyFlights>({
+const initialState : State = {
+	listaVoo: {
 		voosRepetidos: {},
 		voos: []
-	});
-	const [loading, setLoading] = useState<boolean>(true);
-	const [getListaVoo, setGetListaVoo] = useState<boolean>(true);
-
+	},
+	loading: true,
+	getListaVoo: true,
+}
+export default function MeusVoos({ navigation }: NavigationProps) {
+	const [{listaVoo,getListaVoo,loading},setState] = useState<State>(initialState)
 	navigation.addListener("beforeRemove", e => {
 		if(e.data.action.type === "GO_BACK")
 			e.preventDefault()
 		return true
 	});
-	useEffect(() => {
-		async function getLista() {
-			try{
-				const token = await AsyncStorage.getItem("@token");
-				if(!token)
-					throw "Token não informado."
-				const response = await api.get("/my-flights", {
-					headers: { Authorization: token },
-				});
-				const lista = response.data.myFlights.reduce((retorno : MyFlights,voo : ListaVoo) => {
-					if(retorno.voosRepetidos[voo._id]){
-						retorno.voosRepetidos[voo._id]++
-					}else{
-						retorno.voosRepetidos[voo._id] = 1
-						retorno.voos.push(voo)
-					}
-					return retorno
-				}, {
-					voosRepetidos: {},
-					voos: []
-				})
-				setListaVoo(lista);
-				setLoading(false);
-			}catch(err){
-				console.log(err)
-				console.log(err?.response?.data)
+	useFocusEffect(
+		React.useCallback(() => {
+			const clear = () => {
+				setState({...initialState})
 			}
-		}
-		getLista();
-	},[getListaVoo]);
+			getVoos(setState);
+		  	return () => clear()
+		}, [getListaVoo])
+	)
 	return (
 		<Container>
 			<Sidebar
@@ -99,4 +74,35 @@ export default function MeusVoos({ navigation }: NavigationProps) {
 			</FloatingButton>
 		</Container>
 	);
+}
+
+async function getVoos(setState: React.Dispatch<React.SetStateAction<State>>) {
+	try{
+		const token = await AsyncStorage.getItem("@token");
+		if(!token)
+			throw "Token não informado."
+		const response = await api.get("/my-flights", {
+			headers: { Authorization: token },
+		});
+		const lista = response.data.myFlights.reduce((retorno : MyFlights,voo : ListaVoo) => {
+			if(retorno.voosRepetidos[voo._id]){
+				retorno.voosRepetidos[voo._id]++
+			}else{
+				retorno.voosRepetidos[voo._id] = 1
+				retorno.voos.push(voo)
+			}
+			return retorno
+		}, {
+			voosRepetidos: {},
+			voos: []
+		})
+		setState(prev => ({
+			...prev,
+			listaVoo: lista,
+			loading:false
+		}))
+	}catch(err){
+		console.log(err)
+		console.log(err?.response?.data)
+	}
 }

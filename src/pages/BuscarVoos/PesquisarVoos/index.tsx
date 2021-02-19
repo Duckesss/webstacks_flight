@@ -240,7 +240,19 @@ export default function modalPesquisarVoos(props : Props) {
 							&destination=${campos.destino}
 							&departure1=${Utils.formataData(campos.saida)}
 							&passengers=${campos.numPassageiros}
+							${
+								campos.volta?
+									`&departure2=${Utils.formataData(campos.volta)}`
+								:
+									''
+							}
 						`)
+						console.log(`${
+							campos.volta?
+								`&departure2=${Utils.formataData(campos.volta)}`
+							:
+								''
+						}`,response.data)
 						props.setState(prev => ({
 							...prev,
 							viewController:{
