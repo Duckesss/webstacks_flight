@@ -5,6 +5,7 @@ export interface ViewController {
 	modalConfirmar: boolean;
 	loading: boolean;
 	calendarioVolta: boolean;
+	exibePaginas: boolean;
 }
 export interface Campos {
 	origem: string;

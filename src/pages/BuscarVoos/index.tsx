@@ -10,7 +10,7 @@ import {
 } from "../../components";
 import ConfirmarCompra from "./ConfirmarCompra";
 import PesquisarVoos from "./PesquisarVoos";
-import { ViewController, State } from "./interfaces";
+import { State } from "./interfaces";
 import { ListaVoo, Aeroporto } from "../../interfaces";
 import { NavigationProps as Props } from "./../../routes/types";
 import Utils from "../../Utils";
@@ -32,6 +32,7 @@ const initialState : State = {
 		loading: true,
 		modalConfirmar: false,
 		calendarioVolta: false,
+		exibePaginas: true
 	},
 	listaAeroportos: [],
 }
@@ -61,10 +62,10 @@ export default function BuscarVoos({ navigation }: Props) {
 				viewController:{
 					...prev.viewController,
 					loading:true
-				}
+				},
+				page: initialState.page
 			}))
 			Promise.all(promises).then(values => {
-				console.log("then")
 				const [voos,aeroportos,totalPages] = values
 				setState(prev => ({
 					...prev,
@@ -175,7 +176,10 @@ export default function BuscarVoos({ navigation }: Props) {
 			{
 				listaVoo.length ? (
 					<View>
-						<Text style={{color:"white",padding:15, alignSelf:"flex-end"}}>Página {page} de {totalPages || ''}</Text>
+						{
+							viewController.exibePaginas &&
+							<Text style={{color:"white",padding:15, alignSelf:"flex-end"}}>Página {page} de {totalPages || ''}</Text>
+						}
 						<VooList
 							gridNumber={1}
 							acao={true}

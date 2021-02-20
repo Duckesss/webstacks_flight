@@ -220,13 +220,14 @@ export default function modalPesquisarVoos(props : Props) {
 			<SearchButton 
 				style={{marginTop:10}}
 				onPress={async () => {
-					const camposVazios = Object.entries(campos).some(campo => {
-						if(campo[0] !== "volta")
-							return campo[1] === ""
+					const camposVazios = Object.entries(campos).some(([key,value]) => {
+						if(key !== "volta")
+							return value === ""
 					})
 					if(camposVazios){
 						console.log("CAMPO VAZIO")
 					}else{
+						console.log("else")
 						props.setState(prev => ({
 							...prev,
 							viewController:{
@@ -247,19 +248,14 @@ export default function modalPesquisarVoos(props : Props) {
 									''
 							}
 						`)
-						console.log(`${
-							campos.volta?
-								`&departure2=${Utils.formataData(campos.volta)}`
-							:
-								''
-						}`,response.data)
 						props.setState(prev => ({
 							...prev,
 							viewController:{
 								...prev.viewController,
 								loading: false,
 								modal: false,
-								filter: true
+								filter: true,
+								exibePaginas: false
 							},
 							listaVoo:response.data
 						}))
