@@ -45,6 +45,12 @@ export default function MeusVoos({ navigation }: NavigationProps) {
 				listaVoo.voos.length ? (
 					<VooList
 						gridNumber={1}
+						onRefresh={() => {
+							setState(prev => ({
+								...prev,
+								getListaVoo: !getListaVoo
+							}))
+						}}
 						acao={false}
 						repetidos={listaVoo.voosRepetidos}
 						listaVoo={listaVoo.voos}

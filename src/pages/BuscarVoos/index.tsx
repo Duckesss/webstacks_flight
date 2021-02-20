@@ -187,6 +187,12 @@ export default function BuscarVoos({ navigation }: Props) {
 						<VooList
 							gridNumber={1}
 							acao={true}
+							onRefresh={() => {
+								setState(prev => ({
+									...prev,
+									page: initialState.page
+								}))
+							}}
 							listaVoo={listaVoo}
 							onPress={function(voo : ListaVoo){
 								setState(prev => ({

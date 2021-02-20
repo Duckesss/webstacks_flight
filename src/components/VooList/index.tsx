@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Text, TouchableOpacityProps, View, ViewProps, TouchableOpacity, FlatList } from "react-native";
+import { RefreshControl, Text, TouchableOpacityProps, View, ViewProps, TouchableOpacity, FlatList } from "react-native";
 import { ListaVoo } from "../../interfaces";
 import styles from "./styles";
 import Utils from "../../Utils"
@@ -14,15 +14,26 @@ interface Props{
     }
     acao: boolean;
     onPress?: (voo : ListaVoo) => void
+    onRefresh:() => void
 }
 interface Selected{
     [key: string]: boolean;
 }
-
 export function VooList(props : Props){
+    const [refreshing, setRefreshing] = React.useState(false);
     const collapseIcon = ["expand-less","expand-more"]
 	const [selected, setSelected] = useState<Selected>({} as Selected);
     return <FlatList
+        refreshControl={
+            <RefreshControl
+                refreshing={refreshing}
+                onRefresh={async () => {
+                    setRefreshing(true);
+                    await props.onRefresh()
+                    setRefreshing(false);
+                }}
+            />
+        }
         style={styles.container}
         keyExtractor={(_, index) => String(index)}
         data={props.listaVoo}
