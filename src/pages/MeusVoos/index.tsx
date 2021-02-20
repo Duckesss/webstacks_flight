@@ -30,7 +30,12 @@ export default function MeusVoos({ navigation }: NavigationProps) {
 			const clear = () => {
 				setState({...initialState})
 			}
-			getVoos(setState);
+			getVoos(setState).then(async resposta => {
+				if(resposta?.response?.data?.auth === false){
+					await AsyncStorage.setItem("@token","");
+					navigation.navigate("Login")
+				}
+			});
 		  	return () => clear()
 		}, [getListaVoo])
 	)
@@ -84,9 +89,8 @@ export default function MeusVoos({ navigation }: NavigationProps) {
 
 async function getVoos(setState: React.Dispatch<React.SetStateAction<State>>) {
 	try{
+		console.log("getvoos")
 		const token = await AsyncStorage.getItem("@token");
-		if(!token)
-			throw "Token não informado."
 		const response = await api.get("/my-flights", {
 			headers: { Authorization: token },
 		});
@@ -108,7 +112,6 @@ async function getVoos(setState: React.Dispatch<React.SetStateAction<State>>) {
 			loading:false
 		}))
 	}catch(err){
-		console.log(err)
-		console.log(err?.response?.data)
+		return err
 	}
 }

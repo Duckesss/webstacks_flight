@@ -15,7 +15,9 @@ type LoginProps = DrawerNavigationProp<RootStackParamList, "Login">;
 type MeusVoosProps = DrawerNavigationProp<RootStackParamList, "MeusVoos">;
 type BuscarVoosProps = DrawerNavigationProp<RootStackParamList, "BuscarVoos">;
 
+type Navigation = LoginProps | MeusVoosProps | BuscarVoosProps; 
+
 type NavigationProps = {
-	navigation: LoginProps | MeusVoosProps | BuscarVoosProps;
+	navigation: Navigation
 };
-export type { NavigationProps, RootStackParamList, Pages};
+export type { NavigationProps, RootStackParamList, Pages, Navigation};

@@ -164,7 +164,8 @@ export default function BuscarVoos({ navigation }: Props) {
 					viewController,
 					selectedVoo,
 					listaVoo,
-					setState
+					setState,
+					navigation,
 				})
 			}
 

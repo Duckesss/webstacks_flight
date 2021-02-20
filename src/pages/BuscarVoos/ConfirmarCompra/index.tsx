@@ -8,6 +8,7 @@ import { ListaVoo } from "../../../interfaces";
 import styles from "./styles";
 import { Text, View, TouchableOpacity } from "react-native";
 import api from "../../../services";
+import { Navigation } from "../../../routes/types";
 import { State } from "../interfaces";
 
 
@@ -16,6 +17,7 @@ interface Props {
 	selectedVoo: ListaVoo;
 	setState: React.Dispatch<React.SetStateAction<State>>;
 	listaVoo : ListaVoo[];
+	navigation: Navigation
 }
 
 export default function modalConfirmarCompra(props : Props){
@@ -78,6 +80,10 @@ export default function modalConfirmarCompra(props : Props){
 								listaVoo: props.listaVoo
 							}))
 						}catch(err){
+							if(err?.response?.data?.auth === false){
+								await AsyncStorage.setItem("@token","");
+								props.navigation.navigate("Login")
+							}
 							console.log(err)
 							console.log(err?.response?.data)
 						}
