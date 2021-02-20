@@ -36,6 +36,19 @@ const initialState : State = {
 		exibePaginas: true
 	},
 	listaAeroportos: [],
+	modalPesquisa:{
+		campos:{
+			origem: "",
+			destino: "",
+			saida: "",
+			numPassageiros: "",
+			volta: "",
+		},
+		attrs:{
+			dataVolta: new Date(),
+			dataSaida: new Date(),
+		}
+	}
 }
 
 export default function BuscarVoos({ navigation }: Props) {
@@ -45,7 +58,8 @@ export default function BuscarVoos({ navigation }: Props) {
 		page,
 		totalPages,
 		viewController,
-		listaAeroportos
+		listaAeroportos,
+		modalPesquisa
 	}, setState] = useState<State>(initialState);
 	useFocusEffect(
 		React.useCallback(() => {
@@ -87,28 +101,24 @@ export default function BuscarVoos({ navigation }: Props) {
 		}, [])
 	)
 	useEffect(() => {
-		const getVoos = () => {
+		setState(prev => ({
+			...prev,
+			viewController:{
+				...prev.viewController,
+				loading:true
+			}
+		}))
+		const vooData = api.get(`/voo/?&page=${page}`)
+		vooData.then(response => {
 			setState(prev => ({
 				...prev,
+				listaVoo: response.data,
 				viewController:{
 					...prev.viewController,
-					loading:true
+					loading:false
 				}
 			}))
-			const vooData = api.get(`/voo/?&page=${page}`)
-			vooData.then(response => {
-				setState(prev => ({
-					...prev,
-					listaVoo: response.data,
-					viewController:{
-						...prev.viewController,
-						loading:false
-					}
-				}))
-			})
-		}
-		if(page !== initialState.page)
-			getVoos();
+		})
 	},[page])
 	navigation.addListener("beforeRemove", e => {
 		if(e.data.action.type === "GO_BACK")
@@ -173,6 +183,7 @@ export default function BuscarVoos({ navigation }: Props) {
 				PesquisarVoos({
 					listaAeroportos,
 					viewController,
+					modalPesquisa,
 					setState
 				})
 			}

@@ -7,12 +7,21 @@ export interface ViewController {
 	calendarioVolta: boolean;
 	exibePaginas: boolean;
 }
-export interface Campos {
+interface CamposModalPesquisa {
 	origem: string;
 	destino: string;
 	saida: string;
 	numPassageiros: string;
 	volta?: string;
+}
+interface AttrsModalPesquisa{
+	dataVolta: Date;
+	dataSaida: Date;
+}
+
+export interface ModalPesquisa{
+	campos:CamposModalPesquisa;
+	attrs: AttrsModalPesquisa;
 }
 
 export interface State{
@@ -22,4 +31,5 @@ export interface State{
 	totalPages: number;
 	viewController: ViewController;
 	listaAeroportos: Aeroporto[];
+	modalPesquisa:ModalPesquisa
 }

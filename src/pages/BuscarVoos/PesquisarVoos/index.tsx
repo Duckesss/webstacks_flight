@@ -4,7 +4,7 @@ import {
 	Select,
 	FakeInput,
 } from "../../../components";
-import { ViewController, Campos } from ".././interfaces";
+import { ViewController, ModalPesquisa } from ".././interfaces";
 import { Aeroporto } from "../../../interfaces";
 import Utils from "../../../Utils";
 import { Picker } from "@react-native-picker/picker";
@@ -18,6 +18,7 @@ interface Props {
 	viewController: ViewController;
 	setState: React.Dispatch<React.SetStateAction<State>>;
 	listaAeroportos: Aeroporto[];
+	modalPesquisa: ModalPesquisa;
 }
 const itemVazio = 
 <Picker.Item
@@ -26,17 +27,8 @@ const itemVazio =
 	key={0}
 />
 
-
 export default function modalPesquisarVoos(props : Props) {
-	const [campos, setCampos] = useState<Campos>({
-		origem: "",
-		destino: "",
-		saida: "",
-		numPassageiros: "",
-		volta: "",
-	});
-	const [dataVolta, setDataVolta] = useState<Date>(new Date());
-	const [dataSaida, setDataSaida] = useState<Date>(new Date());
+	const {campos,attrs} = props.modalPesquisa
 	return (
 		<Modal
 			position="bottom"
@@ -61,7 +53,16 @@ export default function modalPesquisarVoos(props : Props) {
 					style: styles.label,
 				}}
 				onValueChange={(value: any) =>
-					setCampos({ ...campos, origem: String(value) })
+					props.setState(prev => ({
+						...prev,
+						modalPesquisa:{
+							...prev.modalPesquisa,
+							campos: {
+								...campos,
+								origem: String(value)
+							}
+						}
+					}))
 				}
 			>
 				{
@@ -86,7 +87,16 @@ export default function modalPesquisarVoos(props : Props) {
 					style: styles.label,
 				}}
 				onValueChange={(value: any) =>{
-					setCampos({ ...campos, destino: String(value) })
+					props.setState(prev => ({
+						...prev,
+						modalPesquisa:{
+							...prev.modalPesquisa,
+							campos: {
+								...campos,
+								destino: String(value)
+							}
+						}
+					}))
 				}}
 			>
 				{
@@ -106,7 +116,7 @@ export default function modalPesquisarVoos(props : Props) {
 
 			{props.viewController.calendarioSaida && (
 				<DateTimePicker
-					value={dataSaida}
+					value={attrs.dataSaida}
 					minimumDate={new Date()}
 					neutralButtonLabel="Limpar"
 					onChange={(
@@ -119,13 +129,19 @@ export default function modalPesquisarVoos(props : Props) {
 								viewController:{
 									...prev.viewController,
 									calendarioSaida:false
+								},
+								modalPesquisa:{
+									...prev.modalPesquisa,
+									campos: {
+										...campos,
+										saida: "",
+									},
+									attrs:{
+										...attrs,
+										dataSaida: new Date()
+									}
 								}
 							}))
-							setCampos({
-								...campos,
-								saida: "",
-							});
-							setDataSaida(new Date());
 							return
 						}
 						if (selectedDate) {
@@ -139,13 +155,19 @@ export default function modalPesquisarVoos(props : Props) {
 								viewController:{
 									...prev.viewController,
 									calendarioSaida: false,
+								},
+								modalPesquisa:{
+									...prev.modalPesquisa,
+									campos: {
+										...campos,
+										saida: novaData,
+									},
+									attrs:{
+										...attrs,
+										dataSaida: date
+									}
 								}
 							}))
-							setCampos({
-								...campos,
-								saida: novaData,
-							});
-							setDataSaida(date);
 						}
 					}}
 				/>
@@ -178,17 +200,23 @@ export default function modalPesquisarVoos(props : Props) {
 				onChangeText={(text: string) => {
 					text = text.replace(/[^\d]/g, "");
 					if (Number(text) > 9) text = text[0];
-
-					setCampos({
-						...campos,
-						numPassageiros: text,
-					});
+					
+					props.setState(prev => ({
+						...prev,
+						modalPesquisa:{
+							...prev.modalPesquisa,
+							campos: {
+								...campos,
+								numPassageiros: text,
+							},
+						}
+					}))
 				}}
 			/>
 
 			{props.viewController.calendarioVolta && (
 				<DateTimePicker
-					value={dataVolta}
+					value={attrs.dataVolta}
 					minimumDate={new Date()}
 					neutralButtonLabel="Limpar"
 					onChange={(
@@ -198,16 +226,23 @@ export default function modalPesquisarVoos(props : Props) {
 						if(event.type === 'neutralButtonPressed'){
 							props.setState(prev => ({
 								...prev,
+								
 								viewController:{
 									...prev.viewController,
-									calendarioSaida:false
+									calendarioVolta:false
+								},
+								modalPesquisa:{
+									...prev.modalPesquisa,
+									campos: {
+										...campos,
+										volta: "",
+									},
+									attrs:{
+										...attrs,
+										dataVolta: new Date()
+									}
 								}
 							}))
-							setCampos({
-								...campos,
-								volta: "",
-							});
-							setDataVolta(new Date());
 							return
 						}
 						if (selectedDate) {
@@ -215,18 +250,27 @@ export default function modalPesquisarVoos(props : Props) {
 							let novaData = `${Utils.pad(date.getDate())}/${Utils.pad(
 								date.getMonth() + 1
 							)}/${date.getFullYear()}`;
+
+
+							
 							props.setState(prev => ({
 								...prev,
 								viewController:{
 									...prev.viewController,
 									calendarioVolta: false,
+								},
+								modalPesquisa:{
+									...prev.modalPesquisa,
+									campos: {
+										...campos,
+										volta: novaData,
+									},
+									attrs:{
+										...attrs,
+										dataVolta: date
+									}
 								}
 							}))
-							setCampos({
-								...campos,
-								volta: novaData,
-							});
-							setDataVolta(date);
 						}
 					}}
 				/>
@@ -265,21 +309,25 @@ export default function modalPesquisarVoos(props : Props) {
 			<SearchButton 
 				style={{marginTop:10}}
 				onPress={async () => {
+					const todosVazios = Object.values(campos).every(value => value === "")
+					if(todosVazios){
+						props.setState(prev => ({
+							...prev,
+							page: 1,
+							viewController:{
+								...prev.viewController,
+								modal: false
+							}
+						}))
+						return
+					}
 					const camposVazios = Object.entries(campos).some(([key,value]) => {
 						if(key !== "volta")
 							return value === ""
 					})
-					const todosVazios = Object.values(campos).every(value => value === "")
 					if(camposVazios){
 						console.log("CAMPO VAZIO")
 					}else{
-						if(todosVazios){
-							props.setState(prev => ({
-								...prev,
-								page: 1
-							}))
-							return
-						}
 						props.setState(prev => ({
 							...prev,
 							viewController:{
