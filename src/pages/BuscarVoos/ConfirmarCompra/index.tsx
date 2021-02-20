@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import {
 	Modal,
 } from "../../../components";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { ViewController, Campos } from ".././interfaces";
-import { ListaVoo, Aeroporto } from "../../../interfaces";
+import { ViewController } from ".././interfaces";
+import { ListaVoo } from "../../../interfaces";
 import styles from "./styles";
 import { Text, View, TouchableOpacity } from "react-native";
 import api from "../../../services";
@@ -23,11 +23,7 @@ export default function modalConfirmarCompra(props : Props){
 		<Modal
 			position="center"
 			animationType="slide"
-			containerStyle={{
-				width:300,
-				height:110,
-				padding:15,
-			}}
+			containerStyle={styles.modalContainerStyle}
 			visible={props.viewController.modalConfirmar}
 			onRequestClose={() =>
 				props.setState(prev => ({
@@ -39,10 +35,7 @@ export default function modalConfirmarCompra(props : Props){
 				}))
 			}
 		>
-			<Text style={{
-				fontSize: 21,
-				marginBottom:10
-			}}>
+			<Text style={styles.confirmarCompraTxt}>
 				Deseja confirmar a compra?
 			</Text>
 			<View style={styles.row}>

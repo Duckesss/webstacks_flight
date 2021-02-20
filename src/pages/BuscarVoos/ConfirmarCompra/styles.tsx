@@ -7,8 +7,6 @@ import {
 	TextInputProps,
 	TouchableOpacityProps,
 } from "react-native";
-import Icon from 'react-native-vector-icons/MaterialIcons';
-import { TouchableOpacity } from "react-native";
 export const inputPadding = 10;
 const inputWidth = 300;
 const styles = StyleSheet.create({
@@ -18,6 +16,10 @@ const styles = StyleSheet.create({
 	confirmar:{
 		backgroundColor: "green",
 		marginRight: 5,
+	},
+	confirmarCompraTxt:{
+		fontSize: 21,
+		marginBottom:10
 	},
 	cancelar:{
 		marginLeft: 5,
@@ -33,6 +35,11 @@ const styles = StyleSheet.create({
 		color: "white",
 		fontSize:20
 	},
+	modalContainerStyle:{
+		width:300,
+		height:110,
+		padding:15,
+	}
 });
 
 export default styles;

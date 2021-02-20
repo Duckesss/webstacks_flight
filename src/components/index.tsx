@@ -8,3 +8,4 @@ export { FakeInput } from "./FakeInput";
 export { VooList } from "./VooList";
 export { Collapse } from "./Collapse";
 export { Sidebar } from "./Sidebar";
+export { PageCount } from "./PageCount";

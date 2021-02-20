@@ -6,7 +6,8 @@ import {
 	Container,
 	Loading,
 	VooList,
-	Sidebar
+	Sidebar,
+	PageCount
 } from "../../components";
 import ConfirmarCompra from "./ConfirmarCompra";
 import PesquisarVoos from "./PesquisarVoos";
@@ -178,7 +179,10 @@ export default function BuscarVoos({ navigation }: Props) {
 					<View>
 						{
 							viewController.exibePaginas &&
-							<Text style={{color:"white",padding:15, alignSelf:"flex-end"}}>Página {page} de {totalPages || ''}</Text>
+							<PageCount
+								page={page}
+								totalPages={totalPages}
+							/>
 						}
 						<VooList
 							gridNumber={1}
