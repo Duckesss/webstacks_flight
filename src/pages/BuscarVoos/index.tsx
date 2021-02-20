@@ -12,12 +12,12 @@ import {
 import ConfirmarCompra from "./ConfirmarCompra";
 import PesquisarVoos from "./PesquisarVoos";
 import { State } from "./interfaces";
-import { ListaVoo, Aeroporto } from "../../interfaces";
+import { ListaVoo } from "../../interfaces";
 import { NavigationProps as Props } from "./../../routes/types";
 import Utils from "../../Utils";
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import api from "../../services";
-import { Text, View } from "react-native";
+import { View } from "react-native";
 import { TouchableWithoutFeedback as Button} from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
 
@@ -169,11 +169,13 @@ export default function BuscarVoos({ navigation }: Props) {
 				})
 			}
 
-			{PesquisarVoos({
-				listaAeroportos,
-				viewController,
-				setState
-			})}
+			{
+				PesquisarVoos({
+					listaAeroportos,
+					viewController,
+					setState
+				})
+			}
 
 			{
 				listaVoo.length ? (

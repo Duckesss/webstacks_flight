@@ -5,7 +5,7 @@ import {
 	FakeInput,
 } from "../../../components";
 import { ViewController, Campos } from ".././interfaces";
-import { ListaVoo, Aeroporto } from "../../../interfaces";
+import { Aeroporto } from "../../../interfaces";
 import Utils from "../../../Utils";
 import { Picker } from "@react-native-picker/picker";
 import DateTimePicker from "@react-native-community/datetimepicker";
@@ -19,6 +19,13 @@ interface Props {
 	setState: React.Dispatch<React.SetStateAction<State>>;
 	listaAeroportos: Aeroporto[];
 }
+const itemVazio = 
+<Picker.Item
+	label={""}
+	value={""}
+	key={0}
+/>
+
 
 export default function modalPesquisarVoos(props : Props) {
 	const [campos, setCampos] = useState<Campos>({
@@ -57,15 +64,19 @@ export default function modalPesquisarVoos(props : Props) {
 					setCampos({ ...campos, origem: String(value) })
 				}
 			>
-				{props.listaAeroportos.map(
-					(aeroporto: Aeroporto, idx: number) => (
-						<Picker.Item
-							label={aeroporto.name}
-							value={aeroporto.code}
-							key={idx}
-						/>
+				{
+					[itemVazio].concat(
+						props.listaAeroportos.map(
+							(aeroporto: Aeroporto, idx: number) => (
+								<Picker.Item
+									label={aeroporto.name}
+									value={aeroporto.code}
+									key={idx+1}
+								/>
+							)
+						)
 					)
-				)}
+				}
 			</Select>
 			<Select
 				labelText="Aeroporto de destino:"
@@ -78,32 +89,50 @@ export default function modalPesquisarVoos(props : Props) {
 					setCampos({ ...campos, destino: String(value) })
 				}}
 			>
-				{props.listaAeroportos.map(
-					(aeroporto: Aeroporto, idx: number) => (
-						<Picker.Item
-							label={aeroporto.name}
-							value={aeroporto.code}
-							key={idx}
-						/>
+				{
+					[itemVazio].concat(
+						props.listaAeroportos.map(
+							(aeroporto: Aeroporto, idx: number) => (
+								<Picker.Item
+									label={aeroporto.name}
+									value={aeroporto.code}
+									key={idx+1}
+								/>
+							)
+						)
 					)
-				)}
+				}
 			</Select>
 
 			{props.viewController.calendarioSaida && (
 				<DateTimePicker
 					value={dataSaida}
 					minimumDate={new Date()}
+					neutralButtonLabel="Limpar"
 					onChange={(
 						event: any,
 						selectedDate: Date | undefined
 					) => {
+						if(event.type === 'neutralButtonPressed'){
+							props.setState(prev => ({
+								...prev,
+								viewController:{
+									...prev.viewController,
+									calendarioSaida:false
+								}
+							}))
+							setCampos({
+								...campos,
+								saida: "",
+							});
+							setDataSaida(new Date());
+							return
+						}
 						if (selectedDate) {
 							const date = selectedDate;
 							let novaData = `${Utils.pad(date.getDate())}/${Utils.pad(
 								date.getMonth() + 1
 							)}/${date.getFullYear()}`;
-
-
 							
 							props.setState(prev => ({
 								...prev,
@@ -161,10 +190,26 @@ export default function modalPesquisarVoos(props : Props) {
 				<DateTimePicker
 					value={dataVolta}
 					minimumDate={new Date()}
+					neutralButtonLabel="Limpar"
 					onChange={(
 						event: any,
 						selectedDate: Date | undefined
 					) => {
+						if(event.type === 'neutralButtonPressed'){
+							props.setState(prev => ({
+								...prev,
+								viewController:{
+									...prev.viewController,
+									calendarioSaida:false
+								}
+							}))
+							setCampos({
+								...campos,
+								volta: "",
+							});
+							setDataVolta(new Date());
+							return
+						}
 						if (selectedDate) {
 							const date = selectedDate;
 							let novaData = `${Utils.pad(date.getDate())}/${Utils.pad(
@@ -224,10 +269,17 @@ export default function modalPesquisarVoos(props : Props) {
 						if(key !== "volta")
 							return value === ""
 					})
+					const todosVazios = Object.values(campos).every(value => value === "")
 					if(camposVazios){
 						console.log("CAMPO VAZIO")
 					}else{
-						console.log("else")
+						if(todosVazios){
+							props.setState(prev => ({
+								...prev,
+								page: 1
+							}))
+							return
+						}
 						props.setState(prev => ({
 							...prev,
 							viewController:{
